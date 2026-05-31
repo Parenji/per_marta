@@ -173,6 +173,12 @@ const placesToVisit = [
     "description": "Capitale verde ed elegante, caratterizzata da ponti pittoreschi, un castello che domina la città e un'atmosfera rilassata e giovane.",
     "image": "https://www.travelfar.it/wp-content/uploads/guida-di-lubiana-il-centro-e-il-fiume-di-notte.jpg"
   },
+  {
+    "name": "Metelkova Mesto",
+    "location": "Ljubljana, Slovenia",
+    "description": "Un vivace e alternativo centro di cultura autonoma situato in una ex caserma militare. Oggi è il cuore della street art di Lubiana, famoso per i suoi graffiti colorati, le sculture bizzarre e le gallerie d'arte indipendenti.",
+    "image": "https://www.visitljubljana.com/assets/Foto-mreza-izbor/metelkova-2__ScaleMaxWidthWzE5MDBd.jpg"
+  },
     {
     "name": "Terrazza Nebotičnik (Il Grattacielo)",
     "location": "Ljubljana, Slovenia",
@@ -355,7 +361,8 @@ const placesToVisit = [
       { name: 'Grotte di Postumia', displayName: 'Grotte di Postumia o Grotte di San Canziano' },
       { name: 'Castello di Predjama', displayName: 'Castello di Predjama' },
       { name: 'Gola di Vintgar', displayName: 'Gola di Vintgar (Vintgar Gorge)' },
-      { name: 'Nebotičnik', displayName: 'Terrazza Nebotičnik (Il Grattacielo)' }
+      { name: 'Nebotičnik', displayName: 'Terrazza Nebotičnik (Il Grattacielo)' },
+      { name: 'Metelkova Mesto', displayName: 'Metelkova Mesto' }
     ]
 
     let result = activity
