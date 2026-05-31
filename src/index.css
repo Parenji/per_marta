@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-rose-50 via-pink-50 to-red-50 min-h-screen;
+  }
+}
+
+@layer components {
+  .love-card {
+    @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-rose-200;
+  }
+  
+  .love-button {
+    @apply bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300;
+  }
+  
+  .section-card {
+    @apply bg-white/70 backdrop-blur-sm rounded-xl shadow-md border border-rose-100 p-6;
+  }
+}
