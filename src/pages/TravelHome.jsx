@@ -168,10 +168,16 @@ const placesToVisit = [
     "image": "https://www.croazia.info/wp-content/uploads/sites/78/postumia-grotte-hd.jpg"
   },
   {
-    "name": "Ljubljana Centro",
+    "name": "Lubliana Centro",
     "location": "Slovenia",
     "description": "Capitale verde ed elegante, caratterizzata da ponti pittoreschi, un castello che domina la città e un'atmosfera rilassata e giovane.",
     "image": "https://www.travelfar.it/wp-content/uploads/guida-di-lubiana-il-centro-e-il-fiume-di-notte.jpg"
+  },
+  {
+    "name": "Castello di Lubiana (Ljubljanski Grad)",
+    "location": "Ljubljana, Slovenia",
+    "description": "L'imponente fortezza medievale che domina la capitale dall'alto della sua collina da quasi un millennio. Raggiungibile a piedi o in funicolare, offre mostre storiche, mostre d'arte e una torre panoramica con una vista mozzafiato a 360 gradi sulla città e sulle Alpi.",
+    "image": "https://www.ljubljanskigrad.si/assets/Vstopnice/GRAJSKA-VSTOPNICA.jpg"
   },
   {
     "name": "Metelkova Mesto",
@@ -356,13 +362,14 @@ const placesToVisit = [
       { name: 'Pola', displayName: 'Pola' },
       { name: 'Arena Romana', displayName: 'Arena Romana' },
       { name: 'Motovun', displayName: 'Motovun' },
-      { name: 'Lubiana', displayName: 'Ljubljana Centro' },
+      { name: 'Ljubljana', displayName: 'Lubliana Centro' },
       { name: 'Lago di Bled', displayName: 'Lago di Bled' },
       { name: 'Grotte di Postumia', displayName: 'Grotte di Postumia o Grotte di San Canziano' },
       { name: 'Castello di Predjama', displayName: 'Castello di Predjama' },
       { name: 'Gola di Vintgar', displayName: 'Gola di Vintgar (Vintgar Gorge)' },
       { name: 'Nebotičnik', displayName: 'Terrazza Nebotičnik (Il Grattacielo)' },
-      { name: 'Metelkova Mesto', displayName: 'Metelkova Mesto' }
+      { name: 'Metelkova Mesto', displayName: 'Metelkova Mesto' },
+      { name: 'Castello di Lubiana', displayName: 'Castello di Lubiana (Ljubljanski Grad)' }
     ]
 
     let result = activity
