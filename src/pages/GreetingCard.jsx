@@ -41,7 +41,7 @@ function GreetingCard() {
     <h1 className="text-[#b83b5e] text-3xl font-bold text-center mb-1">Tanti auguri amore mio! 💖💖💖</h1>
     <div className="text-center text-xl text-[#6a2c70] italic mb-10">Buon trentesimo compleanno!</div>
     
-    <p className="mb-5 text-justify indent-4">Anche tu sei arrivata ai 30, che strano! A me sembra che siamo ancora piccoli.. e vbb..</p>
+    <p className="mb-5 text-justify indent-4">Anche tu sei arrivata ai 30, che strano! A me sembra che siamo ancora piccoli... e vbb...</p>
     <p className="mb-5 text-justify indent-4">Chissà quante cose ancora non so dei 29 anni che hai vissuto senza di me, chissà quante esperienze ti hanno portato a essere quella che sei, chissà quante sfumature purtroppo non riesco ancora a cogliere per questo motivo..</p>
     <p className="mb-5 text-justify indent-4">Un anno fa avevamo passato una bellissima serata tra Caprarola e Vitorchiano, wow mi sembra ieri che passeggiavamo per quei vicoli addobbati a tema giochi. E poi che buona quella cena, non vedo l'ora di tornare all'Antica Cantina con te a pappare un sacco di cibo, magari questo autunno coi porcini freschi.</p>
     <p className="mb-5 text-justify indent-4">Purtroppo stavolta dobbiamo festeggiare lontani e non possiamo riempirci di abbraccini e mi sembra tanto ingiusto e mi sento anche un po' in colpa... siamo stati 29 anni lontani e ancora dobbiamo continuare a esserlo. UFFI PUFFI!</p>
