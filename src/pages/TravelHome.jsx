@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom'
 
 function TravelHome() {
   const [activeSection, setActiveSection] = useState('hotels')
-  const [selectedFoodDay, setSelectedFoodDay] = useState(1)
+  const [selectedFoodRegion, setSelectedFoodRegion] = useState('trieste')
+  const [selectedPlaceRegion, setSelectedPlaceRegion] = useState('trieste')
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -168,7 +169,7 @@ const placesToVisit = [
     "image": "https://www.croazia.info/wp-content/uploads/sites/78/postumia-grotte-hd.jpg"
   },
   {
-    "name": "Lubliana Centro",
+    "name": "Lubiana Centro",
     "location": "Slovenia",
     "description": "Capitale verde ed elegante, caratterizzata da ponti pittoreschi, un castello che domina la città e un'atmosfera rilassata e giovane.",
     "image": "https://www.travelfar.it/wp-content/uploads/guida-di-lubiana-il-centro-e-il-fiume-di-notte.jpg"
@@ -312,24 +313,12 @@ const placesToVisit = [
     }
   ]
 
-  const getFoodsForDay = (day) => {
-    if (day === 1) {
-      // Giorno 1: viaggio Trieste -> Istria, mostra entrambe
-      return typicalFoods.filter(food =>
-        food.region.includes("Trieste") || food.region.includes("Istria")
-      )
-    } else if (day === 2 || day === 3) {
-      // Giorni 2-3: solo Istria
+  const getFoodsForRegion = (region) => {
+    if (region === 'trieste') {
+      return typicalFoods.filter(food => food.region.includes("Trieste"))
+    } else if (region === 'istria') {
       return typicalFoods.filter(food => food.region.includes("Istria"))
-    } else if (day === 4) {
-      // Giorno 4: viaggio Istria -> Slovenia, mostra entrambe
-      return typicalFoods.filter(food =>
-        food.region.includes("Istria") ||
-        food.region.includes("Slovenia") ||
-        food.region.includes("Bled")
-      )
-    } else if (day >= 5 && day <= 7) {
-      // Giorni 5-6: solo Slovenia
+    } else if (region === 'slovenia') {
       return typicalFoods.filter(food =>
         food.region.includes("Slovenia") || food.region.includes("Bled")
       )
@@ -337,32 +326,58 @@ const placesToVisit = [
     return []
   }
 
+  const getPlacesForRegion = (region) => {
+    if (region === 'trieste') {
+      return placesToVisit.filter(place => place.location.includes("Trieste"))
+    } else if (region === 'istria') {
+      return placesToVisit.filter(place => place.location.includes("Istria"))
+    } else if (region === 'slovenia') {
+      return placesToVisit.filter(place =>
+        place.location.includes("Slovenia") || place.location.includes("Postumia") || place.location.includes("Ljubljana") || place.location.includes("Bled")
+      )
+    }
+    return []
+  }
+
   const handlePlaceClick = (placeName) => {
-    const placeIndex = placesToVisit.findIndex(place =>
+    const place = placesToVisit.find(place =>
       place.name.toLowerCase().includes(placeName.toLowerCase()) ||
       placeName.toLowerCase().includes(place.name.toLowerCase().split('(')[0].trim().toLowerCase())
     )
-    if (placeIndex !== -1) {
+    if (place) {
+      // Determina la regione basata sulla location
+      let region = 'slovenia'
+      if (place.location.includes('Trieste')) {
+        region = 'trieste'
+      } else if (place.location.includes('Istria')) {
+        region = 'istria'
+      }
+      
+      setSelectedPlaceRegion(region)
       setActiveSection('places')
+      
       setTimeout(() => {
-        const element = document.getElementById(`place-${placeIndex}`)
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        const placeIndex = getPlacesForRegion(region).findIndex(p => p.name === place.name)
+        if (placeIndex !== -1) {
+          const element = document.getElementById(`place-${placeIndex}`)
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
         }
-      }, 100)
+      }, 200)
     }
   }
 
   const makeActivityClickable = (activity) => {
     const placeKeywords = [
-      { name: 'Piazza Unità', displayName: 'Piazza Unità d\'Italia' },
+      { name: 'Piazza Unità d\'Italia', displayName: 'Piazza Unità d\'Italia' },
       { name: 'Castello di Miramare', displayName: 'Castello di Miramare' },
       { name: 'Parenzo', displayName: 'Parenzo' },
       { name: 'Rovigno', displayName: 'Rovigno' },
       { name: 'Pola', displayName: 'Pola' },
       { name: 'Arena Romana', displayName: 'Arena Romana' },
       { name: 'Motovun', displayName: 'Motovun' },
-      { name: 'Ljubljana', displayName: 'Lubliana Centro' },
+      { name: 'Ljubljana', displayName: 'Lubiana Centro' },
       { name: 'Lago di Bled', displayName: 'Lago di Bled' },
       { name: 'Grotte di Postumia', displayName: 'Grotte di Postumia o Grotte di San Canziano' },
       { name: 'Castello di Predjama', displayName: 'Castello di Predjama' },
@@ -388,13 +403,7 @@ const placesToVisit = [
       {/* Header */}
       <div className="bg-gradient-to-r from-rose-500 to-pink-500 text-white py-8 px-4">
         <div className="max-w-6xl mx-auto">
-          <Link 
-            to="/"
-            className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Torna alla home</span>
-          </Link>
+
           
           <div className="flex items-center gap-3 mb-4">
             <Heart className="w-10 h-10 animate-pulse-slow" />
@@ -563,35 +572,35 @@ const placesToVisit = [
               <div className="space-y-4">
                 {itinerary.map((day) => (
                   <div key={day.day} className="section-card">
-                    <div className="flex items-start gap-3 sm:gap-4">
-                      <div className="bg-gradient-to-br from-rose-500 to-pink-500 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center font-bold text-base sm:text-lg flex-shrink-0">
+                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-rose-100">
+                      <div className="bg-gradient-to-br from-rose-500 to-pink-500 text-white rounded-full w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center font-bold text-lg sm:text-xl flex-shrink-0">
                         {day.day}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                           <span className="text-rose-500 font-semibold text-sm sm:text-base">{day.date}</span>
                           <span className="text-rose-400 hidden sm:inline">•</span>
                           <span className="text-rose-800 font-semibold text-sm sm:text-base">{day.title}</span>
                         </div>
-                        <ul className="space-y-2 sm:space-y-1">
-                          {day.activities.map((activity, idx) => (
-                            <li key={idx} className="text-rose-700 flex items-start gap-2 text-sm sm:text-base">
-                              <Heart className="w-3 h-3 text-rose-400 flex-shrink-0 mt-0.5 sm:mt-0" />
-                              <span
-                                className="break-words"
-                                dangerouslySetInnerHTML={{ __html: makeActivityClickable(activity) }}
-                                onClick={(e) => {
-                                  const target = e.target.closest('[data-place]')
-                                  if (target) {
-                                    handlePlaceClick(target.dataset.place)
-                                  }
-                                }}
-                              />
-                            </li>
-                          ))}
-                        </ul>
                       </div>
                     </div>
+                    <ul className="space-y-2 sm:space-y-1">
+                      {day.activities.map((activity, idx) => (
+                        <li key={idx} className="text-rose-700 flex items-center gap-2 text-sm sm:text-base">
+                          <Heart className="w-3 h-3 text-rose-400 flex-shrink-0" />
+                          <span
+                            className="break-words"
+                            dangerouslySetInnerHTML={{ __html: makeActivityClickable(activity) }}
+                            onClick={(e) => {
+                              const target = e.target.closest('[data-place]')
+                              if (target) {
+                                handlePlaceClick(target.dataset.place)
+                              }
+                            }}
+                          />
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 ))}
               </div>
@@ -604,9 +613,45 @@ const placesToVisit = [
                 <MapPin className="w-6 h-6 text-rose-500" />
                 <h2 className="text-2xl font-bold text-rose-800">Luoghi da Visitare</h2>
               </div>
-              
+
+              <div className="section-card">
+                <h3 className="text-lg font-semibold text-rose-800 mb-3">Seleziona la località:</h3>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => setSelectedPlaceRegion('trieste')}
+                    className={`px-4 py-2 rounded-full font-medium transition-all ${
+                      selectedPlaceRegion === 'trieste'
+                        ? 'bg-rose-500 text-white shadow-lg'
+                        : 'bg-rose-100 text-rose-700 hover:bg-rose-200'
+                    }`}
+                  >
+                    Trieste
+                  </button>
+                  <button
+                    onClick={() => setSelectedPlaceRegion('istria')}
+                    className={`px-4 py-2 rounded-full font-medium transition-all ${
+                      selectedPlaceRegion === 'istria'
+                        ? 'bg-rose-500 text-white shadow-lg'
+                        : 'bg-rose-100 text-rose-700 hover:bg-rose-200'
+                    }`}
+                  >
+                    Istria
+                  </button>
+                  <button
+                    onClick={() => setSelectedPlaceRegion('slovenia')}
+                    className={`px-4 py-2 rounded-full font-medium transition-all ${
+                      selectedPlaceRegion === 'slovenia'
+                        ? 'bg-rose-500 text-white shadow-lg'
+                        : 'bg-rose-100 text-rose-700 hover:bg-rose-200'
+                    }`}
+                  >
+                    Slovenia
+                  </button>
+                </div>
+              </div>
+
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {placesToVisit.map((place, index) => (
+                {getPlacesForRegion(selectedPlaceRegion).map((place, index) => (
                   <div key={index} id={`place-${index}`} className="section-card scroll-mt-24">
                     <div className="aspect-video bg-gradient-to-br from-rose-100 to-pink-100 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
                       <img 
@@ -654,7 +699,7 @@ const placesToVisit = [
                   <ul className="space-y-2">
                     {packingList.documents.map((item, idx) => (
                       <li key={idx} className="text-rose-700 flex items-center gap-2">
-                        <Heart className="w-3 h-3 text-rose-400" />
+                        <Heart className="w-3 h-3 text-rose-400 flex-shrink-0" />
                         {item}
                       </li>
                     ))}
@@ -669,7 +714,7 @@ const placesToVisit = [
                   <ul className="space-y-2">
                     {packingList.clothing.map((item, idx) => (
                       <li key={idx} className="text-rose-700 flex items-center gap-2">
-                        <Heart className="w-3 h-3 text-rose-400" />
+                        <Heart className="w-3 h-3 text-rose-400 flex-shrink-0" />
                         {item}
                       </li>
                     ))}
@@ -684,7 +729,7 @@ const placesToVisit = [
                   <ul className="space-y-2">
                     {packingList.essentials.map((item, idx) => (
                       <li key={idx} className="text-rose-700 flex items-center gap-2">
-                        <Heart className="w-3 h-3 text-rose-400" />
+                        <Heart className="w-3 h-3 text-rose-400 flex-shrink-0" />
                         {item}
                       </li>
                     ))}
@@ -703,29 +748,46 @@ const placesToVisit = [
 
               {/* Day Selector */}
               <div className="section-card">
-                <h3 className="text-lg font-semibold text-rose-800 mb-3">Seleziona il giorno dell'itinerario:</h3>
+                <h3 className="text-lg font-semibold text-rose-800 mb-3">Seleziona la località:</h3>
                 <div className="flex flex-wrap gap-2">
-                  {itinerary.map((day) => (
-                    <button
-                      key={day.day}
-                      onClick={() => setSelectedFoodDay(day.day)}
-                      className={`px-4 py-2 rounded-full font-medium transition-all ${
-                        selectedFoodDay === day.day
-                          ? 'bg-rose-500 text-white shadow-lg'
-                          : 'bg-rose-100 text-rose-700 hover:bg-rose-200'
-                      }`}
-                    >
-                      Giorno {day.day}
-                    </button>
-                  ))}
+                  <button
+                    onClick={() => setSelectedFoodRegion('trieste')}
+                    className={`px-4 py-2 rounded-full font-medium transition-all ${
+                      selectedFoodRegion === 'trieste'
+                        ? 'bg-rose-500 text-white shadow-lg'
+                        : 'bg-rose-100 text-rose-700 hover:bg-rose-200'
+                    }`}
+                  >
+                    Trieste
+                  </button>
+                  <button
+                    onClick={() => setSelectedFoodRegion('istria')}
+                    className={`px-4 py-2 rounded-full font-medium transition-all ${
+                      selectedFoodRegion === 'istria'
+                        ? 'bg-rose-500 text-white shadow-lg'
+                        : 'bg-rose-100 text-rose-700 hover:bg-rose-200'
+                    }`}
+                  >
+                    Istria
+                  </button>
+                  <button
+                    onClick={() => setSelectedFoodRegion('slovenia')}
+                    className={`px-4 py-2 rounded-full font-medium transition-all ${
+                      selectedFoodRegion === 'slovenia'
+                        ? 'bg-rose-500 text-white shadow-lg'
+                        : 'bg-rose-100 text-rose-700 hover:bg-rose-200'
+                    }`}
+                  >
+                    Slovenia
+                  </button>
                 </div>
               </div>
 
               {/* Foods Display */}
               <div className="space-y-4">
-                {getFoodsForDay(selectedFoodDay).length > 0 ? (
+                {getFoodsForRegion(selectedFoodRegion).length > 0 ? (
                   <div className="grid md:grid-cols-2 gap-6">
-                    {getFoodsForDay(selectedFoodDay).map((food) => (
+                    {getFoodsForRegion(selectedFoodRegion).map((food) => (
                       <div key={food.id} className="section-card">
                         <div className="aspect-video bg-gradient-to-br from-rose-100 to-pink-100 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
                           <img 
@@ -758,7 +820,7 @@ const placesToVisit = [
                   <div className="section-card text-center py-8">
                     <Utensils className="w-16 h-16 mx-auto text-rose-300 mb-4" />
                     <p className="text-rose-600">
-                      Nessun piatto tipico disponibile per questo giorno
+                      Nessun piatto tipico disponibile per questa località
                     </p>
                   </div>
                 )}
@@ -776,8 +838,8 @@ const placesToVisit = [
               <div className="section-card">
                 <ul className="space-y-3">
                   {notes.map((note, idx) => (
-                    <li key={idx} className="text-rose-700 flex items-start gap-3">
-                      <Heart className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
+                    <li key={idx} className="text-rose-700 flex items-center gap-3">
+                      <Heart className="w-3 h-3 text-rose-400 flex-shrink-0" />
                       {note}
                     </li>
                   ))}
@@ -794,15 +856,15 @@ const placesToVisit = [
                 </p>
                 <ul className="space-y-2 text-rose-600">
                   <li className="flex items-center gap-2">
-                    <Heart className="w-3 h-3" />
+                    <Heart className="w-3 h-3 flex-shrink-0" />
                     Controllare il livello del carburante
                   </li>
                   <li className="flex items-center gap-2">
-                    <Heart className="w-3 h-3" />
+                    <Heart className="w-3 h-3 flex-shrink-0" />
                     Portare il documento della macchina
                   </li>
                   <li className="flex items-center gap-2">
-                    <Heart className="w-3 h-3" />
+                    <Heart className="w-3 h-3 flex-shrink-0" />
                     Pianificare le tappe per il rifornimento
                   </li>
                 </ul>
@@ -819,9 +881,16 @@ const placesToVisit = [
             <Heart key={i} className="w-5 h-5 text-rose-400 fill-rose-400" />
           ))}
         </div>
-        <p className="text-rose-600">
+        <p className="text-rose-600 mb-4">
           Un viaggio indimenticabile con la mia Marta 💖
         </p>
+        <Link
+          to="/bigliettino"
+          className="inline-flex items-center gap-2 bg-rose-100 text-rose-600 hover:bg-rose-200 px-4 py-2 rounded-full transition-colors text-sm font-medium"
+        >
+          <Heart className="w-4 h-4" />
+          <span>Rileggi il bigliettino</span>
+        </Link>
       </div>
     </div>
   )

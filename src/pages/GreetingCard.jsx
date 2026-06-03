@@ -72,7 +72,7 @@ E adesso........
               </div>
               
               <Link 
-                to="/viaggio"
+                to="/"
                 className="love-button inline-flex items-center gap-2"
               >
                 <span>Scopri il nostro viaggio</span>
