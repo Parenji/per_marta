@@ -1,16 +1,16 @@
 import { Link } from 'react-router-dom'
-import { Heart, MapPin, Gift } from 'lucide-react'
+import { Heart, MapPin, GraduationCap } from 'lucide-react'
 
 function Landing() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="love-card max-w-2xl w-full p-8 md:p-12 text-center animate-fade-in">
         <div className="mb-8">
-          <Heart className="w-16 h-16 mx-auto text-rose-500 animate-pulse-slow" />
+          <GraduationCap className="w-16 h-16 mx-auto text-amber-500 animate-pulse-slow" />
         </div>
         
         <h1 className="text-4xl md:text-5xl font-bold text-rose-800 mb-4">
-          💖 30 Anni di Marta 💖
+          💖 Per Marta 🎓
         </h1>
         
         <p className="text-lg text-rose-600 mb-8">
@@ -19,14 +19,14 @@ function Landing() {
         
         <div className="space-y-4 md:space-y-0 md:grid md:grid-cols-2 md:gap-6">
           <Link 
-            to="/bigliettino"
-            className="group block p-6 rounded-xl bg-gradient-to-br from-rose-100 to-pink-100 hover:from-rose-200 hover:to-pink-200 transition-all duration-300 border-2 border-rose-200 hover:border-rose-300"
+            to="/dottorato"
+            className="group block p-6 rounded-xl bg-gradient-to-br from-amber-100 to-yellow-100 hover:from-amber-200 hover:to-yellow-200 transition-all duration-300 border-2 border-amber-200 hover:border-amber-300"
           >
-            <Gift className="w-12 h-12 mx-auto text-rose-500 mb-4 group-hover:scale-110 transition-transform" />
-            <h2 className="text-xl font-semibold text-rose-800 mb-2">
-              Bigliettino d'Amore
+            <GraduationCap className="w-12 h-12 mx-auto text-amber-600 mb-4 group-hover:scale-110 transition-transform" />
+            <h2 className="text-xl font-semibold text-amber-800 mb-2">
+              Congratulazioni Dott.ssa!
             </h2>
-            <p className="text-rose-600 text-sm">
+            <p className="text-amber-700 text-sm">
               Leggi il mio messaggio per te
             </p>
           </Link>
@@ -46,7 +46,7 @@ function Landing() {
         </div>
         
         <div className="mt-8 text-rose-400 text-sm">
-          3-9 Agosto 2024 • Istria, Slovenia & Trieste
+          2-9 Agosto 2026 • Trieste, Istria & Slovenia
         </div>
       </div>
     </div>

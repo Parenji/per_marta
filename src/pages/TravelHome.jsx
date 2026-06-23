@@ -13,6 +13,16 @@ function TravelHome() {
 
   const hotels = [
     {
+      id: 0,
+      name: "In centro a Trieste",
+      location: "Trieste",
+      dates: "2-3 Agosto",
+      bookingLink: "https://www.booking.com/hotel/it/in-centro-a-trieste-trieste.it.html",
+      mapsLink: "https://maps.app.goo.gl/?q=In+centro+a+Trieste+Trieste",
+      image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/451944196.jpg?k=b1df6f3d0bdeef1d4a30d332ec202252de11d1b89cc005611d9a5faf0370e746&o=",
+      notes: "Pernottamento nella prima notte a Trieste"
+    },
+    {
       id: 1,
       name: "Lavanda Apartments & Room",
       location: "Sveti Lovreč (Istria)",
@@ -37,18 +47,30 @@ function TravelHome() {
 const itinerary = [
   {
     "day": 1,
-    "date": "3 Agosto",
-    "title": "Padova, Trieste e Arrivo in Istria",
+    "date": "2 Agosto",
+    "title": "Arrivo a Trieste",
     "activities": [
-      "Partenza da Padova al mattino presto in direzione Trieste.",
-      "Sosta a Trieste: passeggiata in Piazza Unità d'Italia e caffè storico.",
-      "Visita al Castello di Miramare e ai suoi splendidi giardini sul mare.",
-      "Pomeriggio: viaggio verso l'Istria, passaggio della frontiera e arrivo a Sveti Lovreč.",
-      "Check-in e cena romantica a base di specialità istriane (tartufo e fusi) a Sveti Lovreč o Parenzo."
+      "Partenza da Padova in direzione Trieste.",
+      "Passeggiata in Piazza Unità d'Italia, la piazza più grande d'Europa aperta sul mare.",
+      "Caffè in uno degli storici caffè letterari triestini.",
+      "Check-in nell'alloggio in centro a Trieste.",
+      "Cena romantica in centro e passeggiata serale sul Molo Audace."
     ]
   },
   {
     "day": 2,
+    "date": "3 Agosto",
+    "title": "Castello di Miramare e Arrivo in Istria",
+    "activities": [
+      "Mattina: Visita al Castello di Miramare e ai suoi splendidi giardini sul mare.",
+      "Check-out e partenza da Trieste verso l'Istria.",
+      "Pranzo lungo il tragitto e passaggio della frontiera.",
+      "Pomeriggio: Arrivo a Sveti Lovreč e check-in al Lavanda Apartments.",
+      "Sera: Passeggiata tra le mura medievali del borgo e cena a base di specialità istriane (tartufo e fusi) a Sveti Lovreč o Parenzo."
+    ]
+  },
+  {
+    "day": 3,
     "date": "4 Agosto",
     "title": "Il fascino di Rovigno e il Canale di Leme",
     "activities": [
@@ -59,18 +81,18 @@ const itinerary = [
     ]
   },
   {
-    "day": 3,
+    "day": 4,
     "date": "5 Agosto",
     "title": "Pola Romana e i borghi dell'entroterra",
     "activities": [
-      "Mattina: Visita a Pola (Pula) per ammirare la maestosa Arena Romana, il Tempio di Augusto e l'Arco dei Sergi.",
-      "Pranzo veloce a Pola e spostamento verso l'entroterra istriano.",
-      "Pomeriggio: Visita a Motovun (Montona) o Grožnjan (Grisignana), incantevoli borghi degli artisti arroccati sulle colline.",
-      "Sera: pappa pappa pappa pappa pappa"
+      "Mattina: Colazione con calma e relax nella piscina della casa in Istria.",
+      "Prendere il sole, leggere un libro, godersi la tranquillità del borgo di Sveti Lovreč.",
+      "Pomeriggio: Visita a Pola (Pula) per ammirare la maestosa Arena Romana, il Tempio di Augusto e l'Arco dei Sergi.",
+      "Sera: Cena rilassata e passeggiata serale sotto le stelle."
     ]
   },
   {
-    "day": 4,
+    "day": 5,
     "date": "6 Agosto",
     "title": "Dall'Istria alle Grotte di Postumia fino a Lubiana",
     "activities": [
@@ -82,7 +104,7 @@ const itinerary = [
     ]
   },
   {
-    "day": 5,
+    "day": 6,
     "date": "7 Agosto",
     "title": "Esplorazione di Lubiana",
     "activities": [
@@ -94,7 +116,7 @@ const itinerary = [
     ]
   },
   {
-    "day": 6,
+    "day": 7,
     "date": "8 Agosto",
     "title": "Escursione al Lago di Bled e Gola di Vintgar",
     "activities": [
@@ -106,7 +128,7 @@ const itinerary = [
     ]
   },
   {
-    "day": 7,
+    "day": 8,
     "date": "9 Agosto",
     "title": "Lubiana e rientro a Padova",
     "activities": [
@@ -186,7 +208,7 @@ const placesToVisit = [
     "description": "Un vivace e alternativo centro di cultura autonoma situato in una ex caserma militare. Oggi è il cuore della street art di Lubiana, famoso per i suoi graffiti colorati, le sculture bizzarre e le gallerie d'arte indipendenti.",
     "image": "https://www.visitljubljana.com/assets/Foto-mreza-izbor/metelkova-2__ScaleMaxWidthWzE5MDBd.jpg"
   },
-    {
+  {
     "name": "Terrazza Nebotičnik (Il Grattacielo)",
     "location": "Ljubljana, Slovenia",
     "description": "Storico edificio degli anni '30 dotato di un caffè all'ultimo piano. È il punto panoramico migliore di Lubiana, ideale per un aperitivo romantico mentre il tramonto illumina il castello.",
@@ -417,7 +439,7 @@ const placesToVisit = [
           </p>
           <p className="text-white/80 flex items-center gap-2">
             <Calendar className="w-5 h-5" />
-            3-9 Agosto 2026
+            2-9 Agosto 2026
           </p>
         </div>
       </div>

@@ -72,7 +72,7 @@ E adesso........
               </div>
               
               <Link 
-                to="/"
+                to="/viaggio"
                 className="love-button inline-flex items-center gap-2"
               >
                 <span>Scopri il nostro viaggio</span>
@@ -80,7 +80,7 @@ E adesso........
               </Link>
               
               <p className="mt-4 text-rose-400 text-sm">
-                3-9 Agosto 2026 • Trieste, Istria e Slovenia
+                2-9 Agosto 2026 • Trieste, Istria e Slovenia
               </p>
             </div>
           </div>
