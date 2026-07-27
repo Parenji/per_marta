@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { MapPin, Calendar, Hotel, Car, Utensils, Camera, Luggage, Edit3, ExternalLink, Heart, ArrowLeft } from 'lucide-react'
+import { MapPin, Calendar, Hotel, Car, Utensils, Camera, Luggage, Edit3, ExternalLink, Heart, ArrowLeft, GraduationCap } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 function TravelHome() {
@@ -18,7 +18,7 @@ function TravelHome() {
       location: "Trieste",
       dates: "2-3 Agosto",
       bookingLink: "https://www.booking.com/hotel/it/in-centro-a-trieste-trieste.it.html",
-      mapsLink: "https://maps.app.goo.gl/?q=In+centro+a+Trieste+Trieste",
+      mapsLink: "https://maps.app.goo.gl/d3Zm7g2Je99PLdmWA",
       image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/451944196.jpg?k=b1df6f3d0bdeef1d4a30d332ec202252de11d1b89cc005611d9a5faf0370e746&o=",
       notes: "Pernottamento nella prima notte a Trieste"
     },
@@ -27,8 +27,8 @@ function TravelHome() {
       name: "Lavanda Apartments & Room",
       location: "Sveti Lovreč (Istria)",
       dates: "3-6 Agosto",
-      bookingLink: "https://www.booking.com/hotel/hr/lavanda-sveti-lovrec.it.html?aid=304142&label=gen173bo-10CAsoZUIUbGF2YW5kYS1zdmV0aS1sb3ZyZWNIFFgDaHGIAQGYATO4AQfIAQ_YAQPoAQH4AQGIAgGYAgSoAgG4ArWy59AGwAIB0gIkYzZhMWIyYmMtNjA5Ny00NTZjLTg4MWQtY2JkYWI5YWE0YmNl2AIB4AIB&sid=b4c6045cf35efce17f79972e628375a6&age=0&checkin=2026-08-09&checkout=2026-08-10&dest_id=-87546&dest_type=city&dist=0&group_adults=2&group_children=0&hapos=1&hpos=1&no_rooms=1&req_adults=2&req_children=0&room1=A%2CA&sb_price_type=total&soh=1&sr_order=popularity&srepoch=1780078907&srpvid=f998811b953f0396&type=total&ucfs=1&#no_availability_msg",
-      mapsLink: "https://maps.app.goo.gl/B9qYA7XcamcbbbU38?g_st=ic",
+      bookingLink: "https://www.booking.com/hotel/hr/lavanda-sveti-lovrec.it.html",
+      mapsLink: "https://maps.app.goo.gl/hPH3n2zo9S23XvLH6",
       image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/754835089.jpg?k=87a03ff645a4c940c9226e41f568eae378a19639b6f393beed8c218fd83409f3&o=",
       notes: "Cancellazione gratuita entro il 3 luglio"
     },
@@ -37,7 +37,7 @@ function TravelHome() {
       name: "Apartments SHISHKA",
       location: "Lubiana",
       dates: "6-9 Agosto",
-      bookingLink: "https://www.booking.com/hotel/si/apartments-shishka.it.html?aid=304142&label=gen173bo-10CAsoywFCEmFwYXJ0bWVudHMtc2hpc2hrYUgUWANocYgBAZgBM7gBB8gBD9gBA-gBAfgBAYgCAZgCBKgCAbgC2rLn0AbAAgHSAiQ0MDFhNDRkNC03MzMwLTRhYzItOTNiYy00MmQxMjdmYWU3MjTYAgHgAgE&sid=b4c6045cf35efce17f79972e628375a6&age=0&checkin=2026-08-09&checkout=2026-08-10&dest_id=-87271&dest_type=city&dist=0&group_adults=2&group_children=0&hapos=1&hpos=1&no_rooms=1&req_adults=2&req_children=0&room1=A%2CA&sb_price_type=total&soh=1&sr_order=popularity&srepoch=1780078943&srpvid=9806812d8eea0e9b&type=total&ucfs=1&#no_availability_msg",
+      bookingLink: "https://www.booking.com/hotel/si/apartments-shishka.it.html",
       mapsLink: "https://maps.app.goo.gl/ZExEBSM3Z6Ct2iKr8?g_st=ic",
       image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/84243557.jpg?k=1d98d7db4adb33f1fa22a4daa1061cbc6827026ee0fffbb9cdd9addb66b0c0fd&o=",
       notes: "Cancellazione gratuita entro il 1 agosto"
@@ -906,13 +906,22 @@ const placesToVisit = [
         <p className="text-rose-600 mb-4">
           Un viaggio indimenticabile con la mia Marta 💖
         </p>
-        <Link
-          to="/bigliettino"
-          className="inline-flex items-center gap-2 bg-rose-100 text-rose-600 hover:bg-rose-200 px-4 py-2 rounded-full transition-colors text-sm font-medium"
-        >
-          <Heart className="w-4 h-4" />
-          <span>Rileggi il bigliettino</span>
-        </Link>
+        <div className="flex flex-wrap justify-center gap-3">
+          <Link
+            to="/bigliettino"
+            className="inline-flex items-center gap-2 bg-rose-100 text-rose-600 hover:bg-rose-200 px-4 py-2 rounded-full transition-colors text-sm font-medium"
+          >
+            <Heart className="w-4 h-4" />
+            <span>Rileggi il bigliettino di compleanno</span>
+          </Link>
+          <Link
+            to="/dottorato"
+            className="inline-flex items-center gap-2 bg-amber-100 text-amber-600 hover:bg-amber-200 px-4 py-2 rounded-full transition-colors text-sm font-medium"
+          >
+            <GraduationCap className="w-4 h-4" />
+            <span>Rileggi il bigliettino di dottorato</span>
+          </Link>
+        </div>
       </div>
     </div>
   )
