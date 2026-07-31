@@ -6,6 +6,7 @@ import InteractiveChecklist from '../components/InteractiveChecklist'
 import TravelDiary from '../components/TravelDiary'
 import SyncPanel from '../components/SyncPanel'
 import { autoSync } from '../lib/sync'
+import SyncIndicator from '../components/SyncIndicator'
 
 function TravelHome() {
   const [activeSection, setActiveSection] = useState('hotels')
@@ -481,10 +482,13 @@ const placesToVisit = [
           <p className="text-xl text-white/90 mb-2">
             Friuli Venezia Giulia • Istria • Slovenia
           </p>
-          <p className="text-white/80 flex items-center gap-2">
-            <Calendar className="w-5 h-5" />
-            2-9 Agosto 2026
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-white/80 flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              2-9 Agosto 2026
+            </p>
+            <SyncIndicator />
+          </div>
         </div>
       </div>
 
