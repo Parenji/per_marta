@@ -48,9 +48,10 @@ const itinerary = [
   {
     "day": 1,
     "date": "2 Agosto",
-    "title": "Arrivo a Trieste",
+    "title": "Alla scoperta di Trieste",
     "activities": [
       "Partenza da Padova in direzione Trieste.",
+      "Mattina: Visita al Castello di Miramare e ai suoi splendidi giardini sul mare.",
       "Passeggiata in Piazza Unità d'Italia, la piazza più grande d'Europa aperta sul mare.",
       "Caffè in uno degli storici caffè letterari triestini.",
       "Check-in nell'alloggio in centro a Trieste.",
@@ -60,10 +61,10 @@ const itinerary = [
   {
     "day": 2,
     "date": "3 Agosto",
-    "title": "Castello di Miramare e Arrivo in Istria",
+    "title": "Verso l'Istria e borghi dell'entroterra",
     "activities": [
-      "Mattina: Visita al Castello di Miramare e ai suoi splendidi giardini sul mare.",
       "Check-out e partenza da Trieste verso l'Istria.",
+      "Opzione: Sosta a Grisignana (Grožnjan), borgo medievale degli artisti arroccato su una collina con vista spettacolare sull'Istria.",
       "Pranzo lungo il tragitto e passaggio della frontiera.",
       "Pomeriggio: Arrivo a Sveti Lovreč e check-in al Lavanda Apartments.",
       "Sera: Passeggiata tra le mura medievali del borgo e cena a base di specialità istriane (tartufo e fusi) a Sveti Lovreč o Parenzo."
@@ -83,11 +84,11 @@ const itinerary = [
   {
     "day": 4,
     "date": "5 Agosto",
-    "title": "Pola Romana e i borghi dell'entroterra",
+    "title": "Pola Romana e le Isole Brioni",
     "activities": [
-      "Mattina: Colazione con calma e relax nella piscina della casa in Istria.",
-      "Prendere il sole, leggere un libro, godersi la tranquillità del borgo di Sveti Lovreč.",
-      "Pomeriggio: Visita a Pola (Pula) per ammirare la maestosa Arena Romana, il Tempio di Augusto e l'Arco dei Sergi.",
+      "Mattina: Visita a Pola (Pula) per ammirare la maestosa Arena Romana, il Tempio di Augusto e l'Arco dei Sergi.",
+      "Pomeriggio 1 (40 euro): Escursione in barca alle Isole Brioni da Fažana, per esplorare il parco nazionale con i suoi resti romani e il safari park.",
+      "Pomeriggio 2 (15 euro): Escursione a Premantura (Kamenjak), penisola selvaggia con scogliere spettacolari e calette nascoste, perfetta per snorkeling e natura.",
       "Sera: Cena rilassata e passeggiata serale sotto le stelle."
     ]
   },
@@ -136,6 +137,7 @@ const itinerary = [
       "Opzione: Breve sosta naturalistica o culturale lungo il percorso di ritorno.",
       "Pranzo libero lungo il percorso di viaggio.",
       "Pomeriggio: Viaggio di rientro in autostrada in direzione Padova.",
+      "Sosta a Palmanova per ammirare la città-fortezza a stella, patrimonio UNESCO.",
       "Arrivo a Padova in serata."
     ]
   }
@@ -144,87 +146,143 @@ const itinerary = [
 const placesToVisit = [
   {
     "name": "Piazza Unità d'Italia",
-    "location": "Trieste, Italia",
+    "location": "Trieste, Friuli Venezia Giulia",
     "description": "La piazza più grande d'Europa aperta sul mare, circondata da sontuosi palazzi neoclassici e storici caffè letterari.",
-    "image": "https://media.istockphoto.com/id/2231781803/photo/trieste-piazza-unit%C3%A0-ditalia-waterfront-view.jpg?s=612x612&w=0&k=20&c=tFnOlsamFk5yg7e-MiN30O4jm4qmKyp_XxfkxjVNz4I="
+    "image": "https://media.istockphoto.com/id/2231781803/photo/trieste-piazza-unit%C3%A0-ditalia-waterfront-view.jpg?s=612x612&w=0&k=20&c=tFnOlsamFk5yg7e-MiN30O4jm4qmKyp_XxfkxjVNz4I=",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Piazza+Unit%C3%A0+d'Italia,+Trieste"
   },
   {
     "name": "Castello di Miramare",
-    "location": "Trieste, Italia",
+    "location": "Trieste, Friuli Venezia Giulia",
     "description": "Dimora storica affacciata sul golfo di Trieste, circondata da un parco immenso, costruita per l'arciduca Massimiliano d'Asburgo.",
-    "image": "https://miramare.cultura.gov.it/wp-content/uploads/2023/07/CastelloMare5-scaled.jpg"
+    "image": "https://miramare.cultura.gov.it/wp-content/uploads/2023/07/CastelloMare5-scaled.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Castello+di+Miramare,+Trieste"
+  },
+  {
+    "name": "Molo Audace",
+    "location": "Trieste, Friuli Venezia Giulia",
+    "description": "Passeggiata romantica sul mare nel cuore di Trieste, un molo storico che si protende nel golfo offrendo una vista spettacolare su Piazza Unità d'Italia e sulle colline circostanti. Luogo perfetto per una passeggiata serale mano nella mano.",
+    "image": "https://www.discover-trieste.it/proxyvfs.axd/img_full/r15762/file-jpg?v=13161&ext=.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Molo+Audace,+Trieste"
   },
   {
     "name": "Rovigno (Rovinj)",
     "location": "Istria, Croazia",
     "description": "Una delle città più romantiche dell'Adriatico, con le sei case colorate che scendono a picco sul mare e la chiesa di Sant'Eufemia che svetta sul borgo.",
-    "image": "https://magazine.happyage.it/wp-content/uploads/2023/04/Rovigno-cosa-vedere.jpg"
+    "image": "https://magazine.happyage.it/wp-content/uploads/2023/04/Rovigno-cosa-vedere.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Rovigno,+Croazia"
   },
   {
     "name": "Parenzo (Poreč)",
     "location": "Istria, Croazia",
     "description": "Città costiera famosa per la Basilica Eufrasiana, patrimonio UNESCO, con il suo splendido mosaico bizantino del VI secolo e un centro storico medievale ben conservato.",
-    "image": "https://www.croazia.info/wp-content/uploads/sites/78/parenzo-hd.jpg"
+    "image": "https://www.croazia.info/wp-content/uploads/sites/78/parenzo-hd.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Parenzo,+Croazia"
   },
   {
     "name": "Pola - Arena Romana",
     "location": "Istria, Croazia",
     "description": "Uno degli anfiteatri romani meglio conservati al mondo, simbolo della storia millenaria dell'Istria.",
-    "image": "https://www.visitpula.hr/wp-content/uploads/2023/08/Pula-Arial-view-Arena.jpg"
+    "image": "https://www.visitpula.hr/wp-content/uploads/2023/08/Pula-Arial-view-Arena.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Arena+Romana,+Pola,+Croazia"
   },
   {
-    "name": "Motovun (Montona)",
+    "name": "Montona (Motovun)",
     "location": "Istria, Croazia",
     "description": "Affascinante borgo medievale arroccato su una collina nel cuore verde dell'Istria, famoso per il tartufo e i panorami mozzafiato.",
-    "image": "https://www.valamar-experience.com/media/_versions/cities/istra/motovun/motovun_panorama_gallery_main.jpg"
+    "image": "https://www.valamar-experience.com/media/_versions/cities/istra/motovun/motovun_panorama_gallery_main.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Motovun,+Croazia"
+  },
+  {
+    "name": "Grisignana (Grožnjan)",
+    "location": "Istria, Croazia",
+    "description": "Incantevole borgo medievale istriano conosciuto come la 'città degli artisti', con botteghe d'arte e gallerie tra vicoli di pietra. Arroccato su una collina, regala una vista spettacolare sulla valle del Quieto e sul mare.",
+    "image": "https://www.histrica.com/wp-content/uploads/2019/11/Groznjan-Istra-Grisignana-istria-street.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Gro%C5%BEnjan,+Croazia"
+  },
+  {
+    "name": "Isole Brioni (Brijuni)",
+    "location": "Istria, Croazia",
+    "description": "Arcipelago di 14 isole al largo di Fažana, oggi parco nazionale. Ex residenza estiva del maresciallo Tito, custodisce siti archeologici romani, una natura incontaminata e un piccolo safari park con animali esotici.",
+    "image": "https://www.bivillage.com/wp-content/uploads/2022/08/isole-brioni.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Brijuni,+Croazia"
+  },
+  {
+    "name": "Canale di Leme (Limski Kanal)",
+    "location": "Istria, Croazia",
+    "description": "Spettacolare fiordo scavato nella roccia lungo 12 km, a pochi minuti dal nostro alloggio. Un canyon verde smeraldo incastonato tra pareti rocciose, famoso per l'allevamento di ostriche e cozze e per i panorami mozzafiato dalle terrazze panoramiche.",
+    "image": "https://www.infoistria.it/images/articoli/2018-03/Canale-di-Leme-Istria.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Limski+Kanal,+Croazia"
+  },
+  {
+    "name": "Premantura (Kamenjak)",
+    "location": "Istria, Croazia",
+    "description": "Penisola selvaggia all'estremità meridionale dell'Istria, un parco naturale incontaminato con scogliere mozzafiato, calette nascoste e acque cristalline. Ideale per snorkeling, kayak e avvistamento di delfini.",
+    "image": "https://www.placesofjuma.com/wp-content/uploads/2018/04/Premantura-kamenjak-14.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Premantura+Kamenjak,+Croazia"
+  },
+  {
+    "name": "Palmanova",
+    "location": "Friuli Venezia Giulia, Italia",
+    "description": "Città-fortezza a forma di stella a nove punte, patrimonio UNESCO, costruita nel 1593 dalla Repubblica di Venezia. Un capolavoro di architettura militare rinascimentale con la sua piazza esagonale e le tre cinte murarie concentriche.",
+    "image": "https://ita.travel/img/t750h0/blogimg/leto/palmanova_venetian-fortress_aerial.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Palmanova,+Italia"
   },
   {
     "name": "Castello di Predjama",
     "location": "Postumia, Slovenia",
     "description": "Un incredibile castello medievale unico al mondo, costruito oltre 800 anni fa direttamente all'interno della bocca di una grotta, incastonato su una parete di roccia alta 123 metri.",
-    "image": "https://viaggiscrittiamano.com//wp-content/uploads/2025/07/IMG_3790-edited.jpg"
+    "image": "https://viaggiscrittiamano.com//wp-content/uploads/2025/07/IMG_3790-edited.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Castello+di+Predjama,+Slovenia"
   },
   {
     "name": "Grotte di Postumia o Grotte di San Canziano",
     "location": "Postumia, Slovenia",
     "description": "Due capolavori sotterranei: Postumia offre un magico viaggio a bordo di un trenino tra stalattiti millenarie; San Canziano (UNESCO) stupisce con un canyon sotterraneo selvaggio e un ponte sospeso nel vuoto.",
-    "image": "https://www.croazia.info/wp-content/uploads/sites/78/postumia-grotte-hd.jpg"
+    "image": "https://www.croazia.info/wp-content/uploads/sites/78/postumia-grotte-hd.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Grotte+di+Postumia,+Slovenia"
   },
   {
     "name": "Lubiana Centro",
     "location": "Slovenia",
     "description": "Capitale verde ed elegante, caratterizzata da ponti pittoreschi, un castello che domina la città e un'atmosfera rilassata e giovane.",
-    "image": "https://www.travelfar.it/wp-content/uploads/guida-di-lubiana-il-centro-e-il-fiume-di-notte.jpg"
+    "image": "https://www.travelfar.it/wp-content/uploads/guida-di-lubiana-il-centro-e-il-fiume-di-notte.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Ljubljana+centro,+Slovenia"
   },
   {
     "name": "Castello di Lubiana (Ljubljanski Grad)",
     "location": "Ljubljana, Slovenia",
     "description": "L'imponente fortezza medievale che domina la capitale dall'alto della sua collina da quasi un millennio. Raggiungibile a piedi o in funicolare, offre mostre storiche, mostre d'arte e una torre panoramica con una vista mozzafiato a 360 gradi sulla città e sulle Alpi.",
-    "image": "https://www.ljubljanskigrad.si/assets/Vstopnice/GRAJSKA-VSTOPNICA.jpg"
+    "image": "https://www.ljubljanskigrad.si/assets/Vstopnice/GRAJSKA-VSTOPNICA.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Ljubljanski+Grad,+Lubiana"
   },
   {
     "name": "Metelkova Mesto",
     "location": "Ljubljana, Slovenia",
     "description": "Un vivace e alternativo centro di cultura autonoma situato in una ex caserma militare. Oggi è il cuore della street art di Lubiana, famoso per i suoi graffiti colorati, le sculture bizzarre e le gallerie d'arte indipendenti.",
-    "image": "https://www.visitljubljana.com/assets/Foto-mreza-izbor/metelkova-2__ScaleMaxWidthWzE5MDBd.jpg"
+    "image": "https://www.visitljubljana.com/assets/Foto-mreza-izbor/metelkova-2__ScaleMaxWidthWzE5MDBd.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Metelkova+Mesto,+Lubiana"
   },
   {
     "name": "Terrazza Nebotičnik (Il Grattacielo)",
     "location": "Ljubljana, Slovenia",
     "description": "Storico edificio degli anni '30 dotato di un caffè all'ultimo piano. È il punto panoramico migliore di Lubiana, ideale per un aperitivo romantico mentre il tramonto illumina il castello.",
-    "image": "https://kongres-magazine.eu/wp-content/uploads/2019/05/neboticnik-2.jpg?x97274"
+    "image": "https://kongres-magazine.eu/wp-content/uploads/2019/05/neboticnik-2.jpg?x97274",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Neboti%C4%8Dnik,+Lubiana"
   },
   {
     "name": "Lago di Bled",
     "location": "Slovenia",
     "description": "Un lago da fiaba con un'isola centrale sormontata da una chiesa e un castello medievale arroccato su una scogliera calcarea.",
-    "image": "https://www.babytrekking.it/wordpress/wp-content/uploads/2020/05/Lago-di-Bled.jpg"
+    "image": "https://www.babytrekking.it/wordpress/wp-content/uploads/2020/05/Lago-di-Bled.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Lago+di+Bled,+Slovenia"
   },
   {
     "name": "Gola di Vintgar (Vintgar Gorge)",
     "location": "Dintorni di Bled, Slovenia",
     "description": "Una spettacolare gola naturale intagliata dal fiume Radovna. Si visita camminando su passerelle di legno sospese appena sopra acque turchesi e cristalline, fino alla cascata di Šum.",
-    "image": "https://www.chicchediviaggio.it/wp-content/uploads/2019/01/gola-vintgar-passeggiata-natura-slovenia-1.jpg"
+    "image": "https://www.chicchediviaggio.it/wp-content/uploads/2019/01/gola-vintgar-passeggiata-natura-slovenia-1.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Vintgar+Gorge,+Slovenia"
   }
 ];
 
@@ -265,24 +323,24 @@ const placesToVisit = [
   ]
 
   const typicalFoods = [
-    // --- TRIESTE ---
+    // --- FRIULI VENEZIA GIULIA ---
     {
       "id": "ts_jota",
-      "region": "Trieste, Italia",
+      "region": "Friuli Venezia Giulia, Italia",
       "name": "Jota",
       "description": "Una densa e saporita minestra della tradizione triestina e carsica, preparata con crauti (capuzi garbi), fagioli, patate e arricchita con costine o salsicce di maiale affumicate.",
       "image": "https://www.discover-trieste.it/proxyvfs.axd/img_full/r15714/file-jpg?v=14309&ext=.jpg"
     },
     {
       "id": "ts_goulash",
-      "region": "Trieste, Italia",
+      "region": "Friuli Venezia Giulia, Italia",
       "name": "Gulash alla Triestina",
       "description": "Un ricco spezzatino di carne di manzo ereditato dall'Impero Austro-Ungarico, cotto lentamente per ore con un'altissima quantità di cipolle e generosamente speziato con paprika dolce.",
       "image": "https://www.casapappagallo.it/storage/20749/gulasch-triestino.jpg"
     },
     {
       "id": "ts_presnitz",
-      "region": "Trieste, Italia",
+      "region": "Friuli Venezia Giulia, Italia",
       "name": "Presnitz",
       "description": "Dolce tipico triestino a forma di spirale, composto da una sfoglia sottilissima che racchiude un ricco ripieno di noci, mandorle, pinoli, uvetta, cioccolato e rum.",
       "image": "https://www.turismofvg.it/proxyvfs.axd/popup/r305766/file-jpg?v=369353&ext=.jpg"
@@ -337,7 +395,7 @@ const placesToVisit = [
 
   const getFoodsForRegion = (region) => {
     if (region === 'trieste') {
-      return typicalFoods.filter(food => food.region.includes("Trieste"))
+      return typicalFoods.filter(food => food.region.includes("Friuli Venezia Giulia"))
     } else if (region === 'istria') {
       return typicalFoods.filter(food => food.region.includes("Istria"))
     } else if (region === 'slovenia') {
@@ -350,7 +408,7 @@ const placesToVisit = [
 
   const getPlacesForRegion = (region) => {
     if (region === 'trieste') {
-      return placesToVisit.filter(place => place.location.includes("Trieste"))
+      return placesToVisit.filter(place => place.location.includes("Friuli Venezia Giulia"))
     } else if (region === 'istria') {
       return placesToVisit.filter(place => place.location.includes("Istria"))
     } else if (region === 'slovenia') {
@@ -369,7 +427,7 @@ const placesToVisit = [
     if (place) {
       // Determina la regione basata sulla location
       let region = 'slovenia'
-      if (place.location.includes('Trieste')) {
+      if (place.location.includes('Friuli Venezia Giulia')) {
         region = 'trieste'
       } else if (place.location.includes('Istria')) {
         region = 'istria'
@@ -394,19 +452,25 @@ const placesToVisit = [
     const placeKeywords = [
       { name: 'Piazza Unità d\'Italia', displayName: 'Piazza Unità d\'Italia' },
       { name: 'Castello di Miramare', displayName: 'Castello di Miramare' },
+      { name: 'Molo Audace', displayName: 'Molo Audace' },
       { name: 'Parenzo', displayName: 'Parenzo' },
       { name: 'Rovigno', displayName: 'Rovigno' },
       { name: 'Pola', displayName: 'Pola' },
       { name: 'Arena Romana', displayName: 'Arena Romana' },
       { name: 'Motovun', displayName: 'Motovun' },
-      { name: 'Ljubljana', displayName: 'Lubiana Centro' },
+      { name: 'Grisignana', displayName: 'Grisignana (Grožnjan)' },
+      { name: 'Brioni', displayName: 'Isole Brioni (Brijuni)' },
+      { name: 'Canale di Leme', displayName: 'Canale di Leme (Limski Kanal)' },
+      { name: 'Premantura', displayName: 'Premantura (Kamenjak)' },
+      { name: 'Lubiana', displayName: 'Lubiana Centro' },
       { name: 'Lago di Bled', displayName: 'Lago di Bled' },
       { name: 'Grotte di Postumia', displayName: 'Grotte di Postumia o Grotte di San Canziano' },
       { name: 'Castello di Predjama', displayName: 'Castello di Predjama' },
       { name: 'Gola di Vintgar', displayName: 'Gola di Vintgar (Vintgar Gorge)' },
       { name: 'Nebotičnik', displayName: 'Terrazza Nebotičnik (Il Grattacielo)' },
       { name: 'Metelkova Mesto', displayName: 'Metelkova Mesto' },
-      { name: 'Castello di Lubiana', displayName: 'Castello di Lubiana (Ljubljanski Grad)' }
+      { name: 'Castello di Lubiana', displayName: 'Castello di Lubiana (Ljubljanski Grad)' },
+      { name: 'Palmanova', displayName: 'Palmanova' }
     ]
 
     let result = activity
@@ -435,7 +499,7 @@ const placesToVisit = [
           </div>
           
           <p className="text-xl text-white/90 mb-2">
-            Trieste • Istria • Slovenia
+            Friuli Venezia Giulia • Istria • Slovenia
           </p>
           <p className="text-white/80 flex items-center gap-2">
             <Calendar className="w-5 h-5" />
@@ -601,8 +665,8 @@ const placesToVisit = [
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                           <span className="text-rose-500 font-semibold text-sm sm:text-base">{day.date}</span>
-                          <span className="text-rose-400 hidden sm:inline">•</span>
-                          <span className="text-rose-800 font-semibold text-sm sm:text-base">{day.title}</span>
+                  <span className="text-rose-400 hidden sm:inline">•</span>
+                  <span className="text-rose-800 font-semibold text-sm sm:text-base">{day.title}</span>
                         </div>
                       </div>
                     </div>
@@ -647,7 +711,7 @@ const placesToVisit = [
                         : 'bg-rose-100 text-rose-700 hover:bg-rose-200'
                     }`}
                   >
-                    Trieste
+                    Friuli V.G.
                   </button>
                   <button
                     onClick={() => setSelectedPlaceRegion('istria')}
@@ -691,10 +755,21 @@ const placesToVisit = [
                       {place.name}
                     </h3>
                     
-                    <p className="text-rose-600 text-sm mb-2 flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      {place.location}
-                    </p>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-rose-600 text-sm flex items-center gap-2">
+                        <MapPin className="w-4 h-4" />
+                        {place.location}
+                      </p>
+                      <a
+                        href={place.mapsLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 bg-pink-500 text-white px-2.5 py-1 rounded-lg hover:bg-pink-600 transition-colors text-xs flex-shrink-0"
+                      >
+                        <MapPin className="w-3 h-3" />
+                        Maps
+                      </a>
+                    </div>
                     
                     <p className="text-rose-700 text-sm">
                       {place.description}
@@ -780,7 +855,7 @@ const placesToVisit = [
                         : 'bg-rose-100 text-rose-700 hover:bg-rose-200'
                     }`}
                   >
-                    Trieste
+                    Friuli V.G.
                   </button>
                   <button
                     onClick={() => setSelectedFoodRegion('istria')}
