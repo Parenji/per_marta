@@ -6,7 +6,24 @@ const STORAGE_KEY = 'checklist-state'
 function loadChecklistState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : {}
+    if (!raw) return {}
+    const parsed = JSON.parse(raw)
+    // Migrate old format: boolean → {v, t}
+    const migrated = {}
+    let needsMigration = false
+    for (const [key, val] of Object.entries(parsed)) {
+      if (typeof val === 'object' && val !== null && 'v' in val) {
+        migrated[key] = val
+      } else {
+        // Old boolean format → migrate
+        migrated[key] = { v: !!val, t: new Date().toISOString() }
+        needsMigration = true
+      }
+    }
+    if (needsMigration) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated))
+    }
+    return migrated
   } catch {
     return {}
   }
@@ -33,7 +50,8 @@ function InteractiveChecklist({ day, date, title, activities }) {
     const initial = {}
     activities.forEach((_, idx) => {
       const key = makeKey(day, idx)
-      initial[idx] = saved[key] || false
+      const val = saved[key]
+    initial[idx] = val && typeof val === 'object' ? val.v : !!val
     })
     setChecked(initial)
   }, [day, activities])
@@ -45,7 +63,8 @@ function InteractiveChecklist({ day, date, title, activities }) {
       const initial = {}
       activities.forEach((_, idx) => {
         const key = makeKey(day, idx)
-        initial[idx] = saved[key] || false
+        const val = saved[key]
+        initial[idx] = val && typeof val === 'object' ? val.v : !!val
       })
       setChecked(initial)
     }
@@ -58,7 +77,10 @@ function InteractiveChecklist({ day, date, title, activities }) {
     setChecked(prev => {
       const newChecked = { ...prev, [activityIndex]: !prev[activityIndex] }
       const fullState = loadChecklistState()
-      fullState[makeKey(day, activityIndex)] = newChecked[activityIndex]
+      fullState[makeKey(day, activityIndex)] = {
+        v: newChecked[activityIndex],
+        t: new Date().toISOString(),
+      }
       saveChecklistState(fullState)
       return newChecked
     })
@@ -71,8 +93,9 @@ function InteractiveChecklist({ day, date, title, activities }) {
     })
     setChecked(newChecked)
     const fullState = loadChecklistState()
+    const now = new Date().toISOString()
     activities.forEach((_, idx) => {
-      fullState[makeKey(day, idx)] = true
+      fullState[makeKey(day, idx)] = { v: true, t: now }
     })
     saveChecklistState(fullState)
   }, [day, activities])
@@ -84,8 +107,9 @@ function InteractiveChecklist({ day, date, title, activities }) {
     })
     setChecked(newChecked)
     const fullState = loadChecklistState()
+    const now = new Date().toISOString()
     activities.forEach((_, idx) => {
-      fullState[makeKey(day, idx)] = false
+      fullState[makeKey(day, idx)] = { v: false, t: now }
     })
     saveChecklistState(fullState)
   }, [day, activities])

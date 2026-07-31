@@ -120,9 +120,31 @@ function cleanupDeletedIds(mergedEntries, localDeletedIds, remoteEntries) {
   })
 }
 
-// Merge checklist: simple union, local wins on conflict (most recent toggle)
+// Merge checklist: for each key, keep the entry with the most recent timestamp.
+// Each value is now { v: boolean, t: ISO timestamp }.
+// Handles legacy boolean values (migrated on the fly).
 function mergeChecklist(localChecklist, remoteChecklist) {
-  return { ...remoteChecklist, ...localChecklist }
+  const merged = { ...remoteChecklist }
+
+  for (const [key, localVal] of Object.entries(localChecklist)) {
+    const localEntry = typeof localVal === 'object' && localVal !== null ? localVal : { v: !!localVal, t: '0' }
+    const remoteEntry = merged[key]
+    
+    if (!remoteEntry) {
+      // New local key → add
+      merged[key] = localEntry
+    } else {
+      const remoteVal = typeof remoteEntry === 'object' && remoteEntry !== null ? remoteEntry : { v: !!remoteEntry, t: '0' }
+      const localTime = localEntry.t || '0'
+      const remoteTime = remoteVal.t || '0'
+      // Keep the most recent toggle
+      if (localTime >= remoteTime) {
+        merged[key] = localEntry
+      }
+    }
+  }
+
+  return merged
 }
 
 async function fetchRemoteFile() {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { MapPin, Calendar, Hotel, Car, Utensils, Camera, Luggage, Edit3, ExternalLink, Heart, ArrowLeft, GraduationCap, BookOpen } from 'lucide-react'
+import { MapPin, Calendar, Hotel, Car, Utensils, Camera, ExternalLink, Heart, ArrowLeft, GraduationCap, BookOpen } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import MapView from '../components/MapView'
 import InteractiveChecklist from '../components/InteractiveChecklist'
@@ -297,42 +297,6 @@ const placesToVisit = [
   }
 ];
 
-  const packingList = {
-    documents: [
-      "Carta d'identità",
-      "Patente",
-      "Carta di credito",
-      "Assicurazione viaggio (boh forse non ci serve devo informarmi)",
-      "Prenotazioni hotel"
-    ],
-    clothing: [
-      "Abbigliamento leggero",
-      "Costume da bagno",
-      "Scarpe comode",
-      "Scarpe eleganti (ahahahah l'ai pensa che siamo tonti)",
-      "Cappello",
-      "Occhiali da sole"
-    ],
-    essentials: [
-      "Caricabatterie",
-      "Power bank",
-      "iPhone",
-      "Crema solare",
-      "Farmaci personali",
-      "Koalino",
-      "Pikachino",
-      "Koalotta"
-    ]
-  }
-
-  const notes = [
-    "Ricorda di controllare il meteo prima della partenza",
-    "Porta contanti per le piccole spese",
-    "Scarica le mappe offline",
-    "Verifica i documenti di viaggio",
-    "Ricorda che ti amo tanto"
-  ]
-
   const typicalFoods = [
     // --- FRIULI VENEZIA GIULIA ---
     {
@@ -567,17 +531,6 @@ const placesToVisit = [
             <Utensils className="w-4 h-4 inline mr-2" />
             Cibi Tipici
           </button>
-          <button
-            onClick={() => setActiveSection('packing')}
-            className={`px-4 py-2 rounded-full font-medium transition-all ${
-              activeSection === 'packing'
-                ? 'bg-rose-500 text-white shadow-lg'
-                : 'bg-white text-rose-600 hover:bg-rose-100'
-            }`}
-          >
-            <Luggage className="w-4 h-4 inline mr-2" />
-            Valigia
-          </button>
 
           <button
             onClick={() => setActiveSection('map')}
@@ -600,17 +553,6 @@ const placesToVisit = [
           >
             <BookOpen className="w-4 h-4 inline mr-2" />
             Diario
-          </button>
-          <button
-            onClick={() => setActiveSection('notes')}
-            className={`px-4 py-2 rounded-full font-medium transition-all ${
-              activeSection === 'notes'
-                ? 'bg-rose-500 text-white shadow-lg'
-                : 'bg-white text-rose-600 hover:bg-rose-100'
-            }`}
-          >
-            <Edit3 className="w-4 h-4 inline mr-2" />
-            Note
           </button>
         </div>
 
@@ -790,62 +732,6 @@ const placesToVisit = [
             </div>
           )}
 
-          {activeSection === 'packing' && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Luggage className="w-6 h-6 text-rose-500" />
-                <h2 className="text-2xl font-bold text-rose-800">Lista della Valigia</h2>
-              </div>
-              
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="section-card">
-                  <h3 className="text-lg font-semibold text-rose-800 mb-4 flex items-center gap-2">
-                    <Calendar className="w-5 h-5" />
-                    Documenti
-                  </h3>
-                  <ul className="space-y-2">
-                    {packingList.documents.map((item, idx) => (
-                      <li key={idx} className="text-rose-700 flex items-center gap-2">
-                        <Heart className="w-3 h-3 text-rose-400 flex-shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div className="section-card">
-                  <h3 className="text-lg font-semibold text-rose-800 mb-4 flex items-center gap-2">
-                    <Utensils className="w-5 h-5" />
-                    Abbigliamento
-                  </h3>
-                  <ul className="space-y-2">
-                    {packingList.clothing.map((item, idx) => (
-                      <li key={idx} className="text-rose-700 flex items-center gap-2">
-                        <Heart className="w-3 h-3 text-rose-400 flex-shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div className="section-card">
-                  <h3 className="text-lg font-semibold text-rose-800 mb-4 flex items-center gap-2">
-                    <Camera className="w-5 h-5" />
-                    Essenziali
-                  </h3>
-                  <ul className="space-y-2">
-                    {packingList.essentials.map((item, idx) => (
-                      <li key={idx} className="text-rose-700 flex items-center gap-2">
-                        <Heart className="w-3 h-3 text-rose-400 flex-shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )}
-
           {activeSection === 'foods' && (
             <div className="space-y-6">
               <div className="flex items-center gap-2 mb-4">
@@ -944,50 +830,6 @@ const placesToVisit = [
                 <h2 className="text-2xl font-bold text-rose-800">Mappa del Viaggio</h2>
               </div>
               <MapView />
-            </div>
-          )}
-
-          {activeSection === 'notes' && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Edit3 className="w-6 h-6 text-rose-500" />
-                <h2 className="text-2xl font-bold text-rose-800">Note Importanti</h2>
-              </div>
-              
-              <div className="section-card">
-                <ul className="space-y-3">
-                  {notes.map((note, idx) => (
-                    <li key={idx} className="text-rose-700 flex items-center gap-3">
-                      <Heart className="w-3 h-3 text-rose-400 flex-shrink-0" />
-                      {note}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div className="section-card bg-gradient-to-br from-rose-50 to-pink-50">
-                <h3 className="text-lg font-semibold text-rose-800 mb-3 flex items-center gap-2">
-                  <Car className="w-5 h-5" />
-                  Info Viaggio in Macchina
-                </h3>
-                <p className="text-rose-700 mb-2">
-                  Viaggeremo con la mia macchina. Ricorda di:
-                </p>
-                <ul className="space-y-2 text-rose-600">
-                  <li className="flex items-center gap-2">
-                    <Heart className="w-3 h-3 flex-shrink-0" />
-                    Controllare il livello del carburante
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Heart className="w-3 h-3 flex-shrink-0" />
-                    Portare il documento della macchina
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Heart className="w-3 h-3 flex-shrink-0" />
-                    Pianificare le tappe per il rifornimento
-                  </li>
-                </ul>
-              </div>
             </div>
           )}
         </div>
