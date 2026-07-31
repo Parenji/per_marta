@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
-import { MapPin, Calendar, Hotel, Car, Utensils, Camera, Luggage, Edit3, ExternalLink, Heart, ArrowLeft, GraduationCap } from 'lucide-react'
+import { MapPin, Calendar, Hotel, Car, Utensils, Camera, Luggage, Edit3, ExternalLink, Heart, ArrowLeft, GraduationCap, BookOpen } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import MapView from '../components/MapView'
+import InteractiveChecklist from '../components/InteractiveChecklist'
+import TravelDiary from '../components/TravelDiary'
 
 function TravelHome() {
   const [activeSection, setActiveSection] = useState('hotels')
@@ -589,6 +591,17 @@ const placesToVisit = [
             Mappa
           </button>
           <button
+            onClick={() => setActiveSection('diary')}
+            className={`px-4 py-2 rounded-full font-medium transition-all ${
+              activeSection === 'diary'
+                ? 'bg-rose-500 text-white shadow-lg'
+                : 'bg-white text-rose-600 hover:bg-rose-100'
+            }`}
+          >
+            <BookOpen className="w-4 h-4 inline mr-2" />
+            Diario
+          </button>
+          <button
             onClick={() => setActiveSection('notes')}
             className={`px-4 py-2 rounded-full font-medium transition-all ${
               activeSection === 'notes'
@@ -678,37 +691,13 @@ const placesToVisit = [
               
               <div className="space-y-4">
                 {itinerary.map((day) => (
-                  <div key={day.day} className="section-card">
-                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-rose-100">
-                      <div className="bg-gradient-to-br from-rose-500 to-pink-500 text-white rounded-full w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center font-bold text-lg sm:text-xl flex-shrink-0">
-                        {day.day}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                          <span className="text-rose-500 font-semibold text-sm sm:text-base">{day.date}</span>
-                  <span className="text-rose-400 hidden sm:inline">•</span>
-                  <span className="text-rose-800 font-semibold text-sm sm:text-base">{day.title}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <ul className="space-y-2 sm:space-y-1">
-                      {day.activities.map((activity, idx) => (
-                        <li key={idx} className="text-rose-700 flex items-center gap-2 text-sm sm:text-base">
-                          <Heart className="w-3 h-3 text-rose-400 flex-shrink-0" />
-                          <span
-                            className="break-words"
-                            dangerouslySetInnerHTML={{ __html: makeActivityClickable(activity) }}
-                            onClick={(e) => {
-                              const target = e.target.closest('[data-place]')
-                              if (target) {
-                                handlePlaceClick(target.dataset.place)
-                              }
-                            }}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <InteractiveChecklist
+                    key={day.day}
+                    day={day.day}
+                    date={day.date}
+                    title={day.title}
+                    activities={day.activities}
+                  />
                 ))}
               </div>
             </div>
@@ -945,6 +934,8 @@ const placesToVisit = [
               </div>
             </div>
           )}
+
+          {activeSection === 'diary' && <TravelDiary />}
 
           {activeSection === 'map' && (
             <div className="space-y-6">
