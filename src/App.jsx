@@ -8,6 +8,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<TravelHome />} />
+        <Route path="/viaggio" element={<TravelHome />} />
         <Route path="/bigliettino" element={<GreetingCard />} />
         <Route path="/dottorato" element={<PhDCard />} />
       </Routes>
