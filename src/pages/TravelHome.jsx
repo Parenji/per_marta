@@ -51,6 +51,7 @@ const itinerary = [
     "title": "Alla scoperta di Trieste",
     "activities": [
       "Partenza da Padova in direzione Trieste.",
+      "Opzione: Sosta al Sacrario di Redipuglia, il più grande sacrario militare d'Italia dedicato ai caduti della Grande Guerra.",
       "Mattina: Visita al Castello di Miramare e ai suoi splendidi giardini sul mare.",
       "Passeggiata in Piazza Unità d'Italia, la piazza più grande d'Europa aperta sul mare.",
       "Caffè in uno degli storici caffè letterari triestini.",
@@ -164,6 +165,13 @@ const placesToVisit = [
     "description": "Passeggiata romantica sul mare nel cuore di Trieste, un molo storico che si protende nel golfo offrendo una vista spettacolare su Piazza Unità d'Italia e sulle colline circostanti. Luogo perfetto per una passeggiata serale mano nella mano.",
     "image": "https://www.discover-trieste.it/proxyvfs.axd/img_full/r15762/file-jpg?v=13161&ext=.jpg",
     "mapsLink": "https://www.google.com/maps/search/?api=1&query=Molo+Audace,+Trieste"
+  },
+  {
+    "name": "Sacrario di Redipuglia",
+    "location": "Redipuglia, Friuli Venezia Giulia",
+    "description": "Il più grande e maestoso sacrario militare d'Italia, dedicato ai caduti della Grande Guerra. Una scalinata monumentale di 22 gradoni in pietra bianca con la parola 'PRESENTE' ripetuta migliaia di volte, simbolo indelebile del sacrificio di oltre 100.000 soldati italiani.",
+    "image": "https://catalogazione-patrimonioculturale.regione.fvg.it/samira/resource/image/1_GO/Fogliano_Redipuglia/A/Sacrario_Militare/06700097.jpg",
+    "mapsLink": "https://www.google.com/maps/search/?api=1&query=Sacrario+di+Redipuglia,+Italia"
   },
   {
     "name": "Rovigno (Rovinj)",
@@ -453,6 +461,7 @@ const placesToVisit = [
       { name: 'Piazza Unità d\'Italia', displayName: 'Piazza Unità d\'Italia' },
       { name: 'Castello di Miramare', displayName: 'Castello di Miramare' },
       { name: 'Molo Audace', displayName: 'Molo Audace' },
+      { name: 'Sacrario di Redipuglia', displayName: 'Sacrario di Redipuglia' },
       { name: 'Parenzo', displayName: 'Parenzo' },
       { name: 'Rovigno', displayName: 'Rovigno' },
       { name: 'Pola', displayName: 'Pola' },
