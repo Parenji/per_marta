@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { BookOpen, Plus, Trash2, Camera, MapPin, ImagePlus, Link, ChevronDown, ChevronUp } from 'lucide-react'
 import SyncPanel from './SyncPanel'
 import { saveImage, getImage, deleteImage, resizeImage } from '../lib/db'
+import { markDeleted } from '../lib/sync'
 
 const STORAGE_KEY = 'diary-entries'
 const IMAGE_PREFIX = 'diary-img-'
@@ -155,6 +156,8 @@ function TravelDiary() {
         // ignore delete errors
       }
     }
+    // Register deletion in tombstone list for sync
+    markDeleted(id)
     const updated = entries.filter(e => e.id !== id)
     setEntries(updated)
     saveEntries(updated)

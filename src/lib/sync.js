@@ -10,6 +10,7 @@ const STORAGE_KEYS = {
   token: 'github-token',
   entries: 'diary-entries',
   checklist: 'checklist-state',
+  deletedIds: 'diary-deleted-ids',
 }
 
 function getToken() {
@@ -48,28 +49,39 @@ function saveLocalData(entries, checklist) {
   localStorage.setItem(STORAGE_KEYS.checklist, JSON.stringify(checklist))
 }
 
+function loadDeletedIds() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.deletedIds) || '[]')
+  } catch {
+    return []
+  }
+}
+
+function saveDeletedIds(ids) {
+  localStorage.setItem(STORAGE_KEYS.deletedIds, JSON.stringify(ids))
+}
+
 // Merge two arrays of entries by ID.
-// If same ID exists in both, keep the one with newer timestamp.
-// Deleted entries: we track deleted IDs. If an entry exists remotely but locally we just
-// deleted it, we need to know. Strategy: when user deletes locally, we mark it as deleted
-// in a separate list. During merge, if remote has it and local marked deleted → keep remote?
-// Actually simpler: deletions propagate on next sync. If LOCAL deleted AND REMOTE still has it,
-// it means the other phone hasn't synced the deletion yet. We should respect the deletion
-// only if local timestamp > remote timestamp. Otherwise keep remote.
-// Even simpler: local deletions are applied immediately, and on next sync we push the deletion.
-// During merge, we do: start with remote, add local entries that are not in remote,
-// for entries in both, keep the one with higher timestamp.
-function mergeEntries(localEntries, remoteEntries) {
+// Tombstone list: IDs that were deleted locally. Remote entries with those IDs
+// are NOT added back unless they were modified after the deletion timestamp.
+function mergeEntries(localEntries, remoteEntries, localDeletedIds) {
+  const deletedSet = new Map() // id → deletion timestamp
+  for (const item of localDeletedIds) {
+    if (typeof item === 'object') {
+      deletedSet.set(item.id, item.deletedAt || 0)
+    } else {
+      // Legacy format (just ID string/number)
+      deletedSet.set(item, new Date().toISOString())
+    }
+  }
+
   const merged = [...remoteEntries]
-  const remoteIds = new Set(remoteEntries.map(e => e.id))
 
   for (const localEntry of localEntries) {
     const existingIdx = merged.findIndex(e => e.id === localEntry.id)
     if (existingIdx === -1) {
-      // New local entry → add
       merged.push(localEntry)
     } else {
-      // Same ID: keep the one with newer timestamp
       const remoteEntry = merged[existingIdx]
       const localTime = localEntry.timestamp || ''
       const remoteTime = remoteEntry.timestamp || ''
@@ -79,9 +91,33 @@ function mergeEntries(localEntries, remoteEntries) {
     }
   }
 
-  // Sort by timestamp descending
+  // Remove entries that are in the tombstone list, unless remote has a newer version
+  const now = new Date().toISOString()
+  for (let i = merged.length - 1; i >= 0; i--) {
+    const entry = merged[i]
+    if (deletedSet.has(entry.id)) {
+      const deletedAt = deletedSet.get(entry.id)
+      // Keep if remote timestamp > deletion time (other phone re-added/modified it)
+      if ((entry.timestamp || '') > deletedAt) {
+        continue // keep it
+      }
+      merged.splice(i, 1)
+    }
+  }
+
   merged.sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || ''))
   return merged
+}
+
+// Clean up tombstone: remove IDs that no longer exist anywhere
+function cleanupDeletedIds(mergedEntries, localDeletedIds, remoteEntries) {
+  const allIds = new Set([
+    ...mergedEntries.map(e => e.id),
+  ])
+  return localDeletedIds.filter(item => {
+    const id = typeof item === 'object' ? item.id : item
+    return allIds.has(id)
+  })
 }
 
 // Merge checklist: simple union, local wins on conflict (most recent toggle)
@@ -157,25 +193,30 @@ export async function syncAll() {
 
   // 1. Load local data
   const local = loadLocalData()
+  const localDeletedIds = loadDeletedIds()
 
   // 2. Fetch remote data
   const remote = await fetchRemoteFile()
 
   // 3. Merge
-  const mergedEntries = mergeEntries(local.entries, remote.data.entries || [])
+  const mergedEntries = mergeEntries(local.entries, remote.data.entries || [], localDeletedIds)
   const mergedChecklist = mergeChecklist(local.checklist, remote.data.checklist || {})
 
-  // 4. Build final data
+  // 4. Clean up deleted IDs (remove those no longer in either local or remote)
+  const cleanedDeletedIds = cleanupDeletedIds(mergedEntries, localDeletedIds, remote.data.entries || [])
+  saveDeletedIds(cleanedDeletedIds)
+
+  // 5. Build final data
   const finalData = {
     entries: mergedEntries,
     checklist: mergedChecklist,
     lastModified: new Date().toISOString(),
   }
 
-  // 5. Push to GitHub
+  // 6. Push to GitHub
   await pushRemoteFile(finalData, remote.sha)
 
-  // 6. Save merged data locally
+  // 7. Save merged data locally
   saveLocalData(mergedEntries, mergedChecklist)
   setLastSyncTime()
 
@@ -183,6 +224,13 @@ export async function syncAll() {
     entries: mergedEntries,
     checklist: mergedChecklist,
   }
+}
+
+// Mark an entry as deleted (called when user deletes locally)
+export function markDeleted(entryId) {
+  const ids = loadDeletedIds()
+  ids.push({ id: entryId, deletedAt: new Date().toISOString() })
+  saveDeletedIds(ids)
 }
 
 export default {
