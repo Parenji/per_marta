@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { MapPin, Calendar, Hotel, Car, Utensils, Camera, Luggage, Edit3, ExternalLink, Heart, ArrowLeft, GraduationCap } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import MapView from '../components/MapView'
 
 function TravelHome() {
   const [activeSection, setActiveSection] = useState('hotels')
@@ -577,6 +578,17 @@ const placesToVisit = [
           </button>
 
           <button
+            onClick={() => setActiveSection('map')}
+            className={`px-4 py-2 rounded-full font-medium transition-all ${
+              activeSection === 'map'
+                ? 'bg-rose-500 text-white shadow-lg'
+                : 'bg-white text-rose-600 hover:bg-rose-100'
+            }`}
+          >
+            <MapPin className="w-4 h-4 inline mr-2" />
+            Mappa
+          </button>
+          <button
             onClick={() => setActiveSection('notes')}
             className={`px-4 py-2 rounded-full font-medium transition-all ${
               activeSection === 'notes'
@@ -931,6 +943,16 @@ const placesToVisit = [
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {activeSection === 'map' && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-2 mb-4">
+                <MapPin className="w-6 h-6 text-rose-500" />
+                <h2 className="text-2xl font-bold text-rose-800">Mappa del Viaggio</h2>
+              </div>
+              <MapView />
             </div>
           )}
 
