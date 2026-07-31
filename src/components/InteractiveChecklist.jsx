@@ -38,6 +38,21 @@ function InteractiveChecklist({ day, date, title, activities }) {
     setChecked(initial)
   }, [day, activities])
 
+  // Listen for sync-complete events to refresh checklist
+  useEffect(() => {
+    const handler = () => {
+      const saved = loadChecklistState()
+      const initial = {}
+      activities.forEach((_, idx) => {
+        const key = makeKey(day, idx)
+        initial[idx] = saved[key] || false
+      })
+      setChecked(initial)
+    }
+    window.addEventListener('sync-complete', handler)
+    return () => window.removeEventListener('sync-complete', handler)
+  }, [day, activities])
+
   // Persist to localStorage on change
   const toggleActivity = useCallback((activityIndex) => {
     setChecked(prev => {

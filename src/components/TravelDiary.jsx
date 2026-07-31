@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { BookOpen, Plus, Trash2, Camera, MapPin, ImagePlus, Link, ChevronDown, ChevronUp } from 'lucide-react'
+import SyncPanel from './SyncPanel'
 import { saveImage, getImage, deleteImage, resizeImage } from '../lib/db'
 
 const STORAGE_KEY = 'diary-entries'
@@ -174,6 +175,12 @@ function TravelDiary() {
 
   return (
     <div className="space-y-6">
+      <SyncPanel
+        onSyncComplete={(result) => {
+          setEntries(result.entries || [])
+        }}
+      />
+
       <div className="flex items-center gap-2 mb-4">
         <BookOpen className="w-6 h-6 text-rose-500" />
         <h2 className="text-2xl font-bold text-rose-800">Diario di Bordo</h2>
