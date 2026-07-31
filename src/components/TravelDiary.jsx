@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { BookOpen, Plus, Trash2, Camera, MapPin, ImagePlus, Link, ChevronDown, ChevronUp } from 'lucide-react'
 import SyncPanel from './SyncPanel'
 import { saveImage, getImage, deleteImage, resizeImage } from '../lib/db'
-import { markDeleted } from '../lib/sync'
+import { markDeleted, autoSync } from '../lib/sync'
 
 const STORAGE_KEY = 'diary-entries'
 const IMAGE_PREFIX = 'diary-img-'
@@ -141,6 +141,9 @@ function TravelDiary() {
     setNewImageUrl('')
     setShowUrlInput(false)
     setSaving(false)
+
+    // Auto-sync after adding entry
+    autoSync().catch(() => {})
   }, [newText, newImageUrl, selectedDay, entries, selectedFile, clearFileSelection])
 
   const deleteEntry = useCallback(async (id) => {

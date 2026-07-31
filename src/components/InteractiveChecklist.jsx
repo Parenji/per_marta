@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Heart, CheckCircle2, RefreshCw } from 'lucide-react'
+import { debouncedAutoSync } from '../lib/sync'
 
 const STORAGE_KEY = 'checklist-state'
 
@@ -82,6 +83,8 @@ function InteractiveChecklist({ day, date, title, activities }) {
         t: new Date().toISOString(),
       }
       saveChecklistState(fullState)
+      // Auto-sync debounced
+      debouncedAutoSync()
       return newChecked
     })
   }, [day])
@@ -98,6 +101,8 @@ function InteractiveChecklist({ day, date, title, activities }) {
       fullState[makeKey(day, idx)] = { v: true, t: now }
     })
     saveChecklistState(fullState)
+    // Auto-sync debounced
+    debouncedAutoSync()
   }, [day, activities])
 
   const resetAll = useCallback(() => {
@@ -112,6 +117,8 @@ function InteractiveChecklist({ day, date, title, activities }) {
       fullState[makeKey(day, idx)] = { v: false, t: now }
     })
     saveChecklistState(fullState)
+    // Auto-sync debounced
+    debouncedAutoSync()
   }, [day, activities])
 
   const checkedCount = Object.values(checked).filter(Boolean).length

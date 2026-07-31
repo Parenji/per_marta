@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import MapView from '../components/MapView'
 import InteractiveChecklist from '../components/InteractiveChecklist'
 import TravelDiary from '../components/TravelDiary'
+import SyncPanel from '../components/SyncPanel'
+import { autoSync } from '../lib/sync'
 
 function TravelHome() {
   const [activeSection, setActiveSection] = useState('hotels')
@@ -12,6 +14,8 @@ function TravelHome() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
+    // Auto-sync on page load
+    autoSync().catch(() => {})
   }, [])
 
   const hotels = [
@@ -626,6 +630,7 @@ const placesToVisit = [
 
           {activeSection === 'itinerary' && (
             <div className="space-y-6">
+              <SyncPanel />
               <div className="flex items-center gap-2 mb-4">
                 <Calendar className="w-6 h-6 text-rose-500" />
                 <h2 className="text-2xl font-bold text-rose-800">Il Nostro Itinerario</h2>

@@ -209,6 +209,44 @@ async function pushRemoteFile(data, sha) {
   return res.json()
 }
 
+let autoSyncInProgress = false
+let autoSyncDebounceTimer = null
+
+export async function autoSync() {
+  if (autoSyncInProgress) return
+  if (!hasToken()) return
+
+  autoSyncInProgress = true
+  window.dispatchEvent(new CustomEvent('sync-status-change', { detail: { status: 'syncing' } }))
+
+  try {
+    const result = await syncAll()
+    window.dispatchEvent(new CustomEvent('sync-complete', { detail: result }))
+    window.dispatchEvent(new CustomEvent('sync-status-change', { detail: { status: 'success' } }))
+    // Auto-hide success after 2s
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('sync-status-change', { detail: { status: 'idle' } }))
+    }, 2000)
+    return result
+  } catch (err) {
+    window.dispatchEvent(new CustomEvent('sync-status-change', { detail: { status: 'error', message: err.message } }))
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('sync-status-change', { detail: { status: 'idle' } }))
+    }, 5000)
+    throw err
+  } finally {
+    autoSyncInProgress = false
+  }
+}
+
+// Debounced autoSync (for checklist toggles — fire after 2s of inactivity)
+export function debouncedAutoSync() {
+  if (autoSyncDebounceTimer) clearTimeout(autoSyncDebounceTimer)
+  autoSyncDebounceTimer = setTimeout(() => {
+    autoSync().catch(() => {})
+  }, 2000)
+}
+
 export async function syncAll() {
   const token = getToken()
   if (!token) throw new Error('Configura il token GitHub per sincronizzare')
