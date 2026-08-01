@@ -42,7 +42,7 @@ function makeKey(day, activityIndex) {
   return `day-${day}-${activityIndex}`
 }
 
-function InteractiveChecklist({ day, date, title, activities }) {
+function InteractiveChecklist({ day, date, title, activities, onCountChange }) {
   const [checked, setChecked] = useState({})
 
   // Load state from localStorage on mount
@@ -124,6 +124,11 @@ function InteractiveChecklist({ day, date, title, activities }) {
   const checkedCount = Object.values(checked).filter(Boolean).length
   const total = activities.length
   const progressPercent = total > 0 ? Math.round((checkedCount / total) * 100) : 0
+
+  // Notify parent of count changes
+  useEffect(() => {
+    onCountChange?.(day, checkedCount, total)
+  }, [checkedCount, total, day, onCountChange])
 
   return (
     <div className="section-card group">

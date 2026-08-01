@@ -11,6 +11,8 @@ const STORAGE_KEYS = {
   entries: 'diary-entries',
   checklist: 'checklist-state',
   deletedIds: 'diary-deleted-ids',
+  notes: 'travel-notes',
+  notesDeletedIds: 'notes-deleted-ids',
 }
 
 function getToken() {
@@ -37,16 +39,19 @@ function setLastSyncTime() {
 function loadLocalData() {
   let entries = []
   let checklist = {}
+  let notes = []
   try {
     entries = JSON.parse(localStorage.getItem(STORAGE_KEYS.entries) || '[]')
     checklist = JSON.parse(localStorage.getItem(STORAGE_KEYS.checklist) || '{}')
+    notes = JSON.parse(localStorage.getItem(STORAGE_KEYS.notes) || '[]')
   } catch { /* ignore */ }
-  return { entries, checklist }
+  return { entries, checklist, notes }
 }
 
-function saveLocalData(entries, checklist) {
+function saveLocalData(entries, checklist, notes) {
   localStorage.setItem(STORAGE_KEYS.entries, JSON.stringify(entries))
   localStorage.setItem(STORAGE_KEYS.checklist, JSON.stringify(checklist))
+  localStorage.setItem(STORAGE_KEYS.notes, JSON.stringify(notes || []))
 }
 
 function loadDeletedIds() {
@@ -61,10 +66,22 @@ function saveDeletedIds(ids) {
   localStorage.setItem(STORAGE_KEYS.deletedIds, JSON.stringify(ids))
 }
 
+function loadNotesDeletedIds() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.notesDeletedIds) || '[]')
+  } catch {
+    return []
+  }
+}
+
+function saveNotesDeletedIds(ids) {
+  localStorage.setItem(STORAGE_KEYS.notesDeletedIds, JSON.stringify(ids))
+}
+
 // Merge two arrays of entries by ID.
 // Tombstone list: IDs that were deleted locally. Remote entries with those IDs
 // are NOT added back unless they were modified after the deletion timestamp.
-function mergeEntries(localEntries, remoteEntries, localDeletedIds) {
+function mergeEntries(localEntries, remoteEntries, localDeletedIds = []) {
   const deletedSet = new Map() // id → deletion timestamp
   for (const item of localDeletedIds) {
     if (typeof item === 'object') {
@@ -161,7 +178,7 @@ async function fetchRemoteFile() {
 
   if (res.status === 404) {
     // File doesn't exist yet, return empty
-    return { sha: null, data: { entries: [], checklist: {} } }
+    return { sha: null, data: { entries: [], checklist: {}, notes: [] } }
   }
 
   if (!res.ok) {
@@ -251,9 +268,10 @@ export async function syncAll() {
   const token = getToken()
   if (!token) throw new Error('Configura il token GitHub per sincronizzare')
 
-  // 1. Load local data (do this once, local state may change slightly but that's edge-case)
-  const local = loadLocalData()
-  const localDeletedIds = loadDeletedIds()
+      // 1. Load local data (do this once, local state may change slightly but that's edge-case)
+      const local = loadLocalData()
+      const localDeletedIds = loadDeletedIds()
+      const notesDeletedIds = loadNotesDeletedIds()
 
   const MAX_RETRIES = 3
   let lastError = null
@@ -266,15 +284,19 @@ export async function syncAll() {
       // 3. Merge
       const mergedEntries = mergeEntries(local.entries, remote.data.entries || [], localDeletedIds)
       const mergedChecklist = mergeChecklist(local.checklist, remote.data.checklist || {})
+      const mergedNotes = mergeEntries(local.notes, remote.data.notes || [], notesDeletedIds)
 
       // 4. Clean up deleted IDs (remove those no longer in either local or remote)
       const cleanedDeletedIds = cleanupDeletedIds(mergedEntries, localDeletedIds, remote.data.entries || [])
       saveDeletedIds(cleanedDeletedIds)
+      const cleanedNotesDeletedIds = cleanupDeletedIds(mergedNotes, notesDeletedIds, remote.data.notes || [])
+      saveNotesDeletedIds(cleanedNotesDeletedIds)
 
       // 5. Build final data
       const finalData = {
         entries: mergedEntries,
         checklist: mergedChecklist,
+        notes: mergedNotes,
         lastModified: new Date().toISOString(),
       }
 
@@ -282,12 +304,13 @@ export async function syncAll() {
       await pushRemoteFile(finalData, remote.sha)
 
       // 7. Save merged data locally
-      saveLocalData(mergedEntries, mergedChecklist)
+      saveLocalData(mergedEntries, mergedChecklist, mergedNotes)
       setLastSyncTime()
 
       return {
         entries: mergedEntries,
         checklist: mergedChecklist,
+        notes: mergedNotes,
       }
     } catch (err) {
       lastError = err
@@ -313,6 +336,13 @@ export function markDeleted(entryId) {
   const ids = loadDeletedIds()
   ids.push({ id: entryId, deletedAt: new Date().toISOString() })
   saveDeletedIds(ids)
+}
+
+// Mark a note as deleted (called when user deletes locally)
+export function markNoteDeleted(noteId) {
+  const ids = loadNotesDeletedIds()
+  ids.push({ id: noteId, deletedAt: new Date().toISOString() })
+  saveNotesDeletedIds(ids)
 }
 
 export default {

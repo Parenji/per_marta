@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { MapPin, Calendar, Hotel, Car, Utensils, Camera, ExternalLink, Heart, ArrowLeft, GraduationCap, BookOpen } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { MapPin, Calendar, Hotel, Car, Utensils, Camera, ExternalLink, Heart, ArrowLeft, GraduationCap, BookOpen, StickyNote } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import MapView from '../components/MapView'
 import InteractiveChecklist from '../components/InteractiveChecklist'
@@ -7,11 +7,13 @@ import TravelDiary from '../components/TravelDiary'
 import SyncPanel from '../components/SyncPanel'
 import { autoSync } from '../lib/sync'
 import SyncIndicator from '../components/SyncIndicator'
+import TravelNotes from '../components/TravelNotes'
 
 function TravelHome() {
   const [activeSection, setActiveSection] = useState('hotels')
   const [selectedFoodRegion, setSelectedFoodRegion] = useState('trieste')
   const [selectedPlaceRegion, setSelectedPlaceRegion] = useState('trieste')
+  const [dayCounts, setDayCounts] = useState({})
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -428,6 +430,17 @@ const placesToVisit = [
     }
   }
 
+  const handleCountChange = useCallback((day, checked, total) => {
+    setDayCounts(prev => ({
+      ...prev,
+      [day]: { checked, total },
+    }))
+  }, [])
+
+  const globalChecked = Object.values(dayCounts).reduce((sum, c) => sum + c.checked, 0)
+  const globalTotal = Object.values(dayCounts).reduce((sum, c) => sum + c.total, 0)
+  const globalPercent = globalTotal > 0 ? Math.round((globalChecked / globalTotal) * 100) : 0
+
   const makeActivityClickable = (activity) => {
     const placeKeywords = [
       { name: 'Piazza Unità d\'Italia', displayName: 'Piazza Unità d\'Italia' },
@@ -563,6 +576,17 @@ const placesToVisit = [
             <BookOpen className="w-4 h-4 inline mr-2" />
             Diario
           </button>
+          <button
+            onClick={() => setActiveSection('notes')}
+            className={`px-4 py-2 rounded-full font-medium transition-all ${
+              activeSection === 'notes'
+                ? 'bg-rose-500 text-white shadow-lg'
+                : 'bg-white text-rose-600 hover:bg-rose-100'
+            }`}
+          >
+            <StickyNote className="w-4 h-4 inline mr-2" />
+            Note
+          </button>
         </div>
 
         {/* Content Sections */}
@@ -640,6 +664,28 @@ const placesToVisit = [
                 <h2 className="text-2xl font-bold text-rose-800">Il Nostro Itinerario</h2>
               </div>
               
+              {/* Global progress bar */}
+              <div className="section-card bg-gradient-to-r from-rose-500 to-pink-500 text-white">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-semibold text-sm sm:text-base flex items-center gap-2">
+                    <Heart className="w-4 h-4 fill-white" />
+                    Progresso complessivo del viaggio
+                  </h3>
+                  <span className="text-sm sm:text-base font-bold">
+                    {globalChecked}/{globalTotal}
+                  </span>
+                </div>
+                <div className="h-3 bg-white/20 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-white rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${globalPercent}%` }}
+                  />
+                </div>
+                <p className="text-xs text-white/80 mt-2 text-right">
+                  {globalPercent}% delle attività completate
+                </p>
+              </div>
+
               <div className="space-y-4">
                 {itinerary.map((day) => (
                   <InteractiveChecklist
@@ -648,6 +694,7 @@ const placesToVisit = [
                     date={day.date}
                     title={day.title}
                     activities={day.activities}
+                    onCountChange={handleCountChange}
                   />
                 ))}
               </div>
@@ -831,6 +878,7 @@ const placesToVisit = [
           )}
 
           {activeSection === 'diary' && <TravelDiary />}
+          {activeSection === 'notes' && <TravelNotes />}
 
           {activeSection === 'map' && (
             <div className="space-y-6">
