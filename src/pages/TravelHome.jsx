@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import MapView from '../components/MapView'
 import InteractiveChecklist from '../components/InteractiveChecklist'
 import TravelDiary from '../components/TravelDiary'
+import SyncPanel from '../components/SyncPanel'
 import { autoSync } from '../lib/sync'
 import SyncIndicator from '../components/SyncIndicator'
 
@@ -844,6 +845,7 @@ const placesToVisit = [
 
       {/* Footer */}
       <div className="max-w-6xl mx-auto px-4 mt-12 text-center">
+        <SyncPanel />
         <div className="flex justify-center gap-2 mb-4">
           {[...Array(5)].map((_, i) => (
             <Heart key={i} className="w-5 h-5 text-rose-400 fill-rose-400" />
