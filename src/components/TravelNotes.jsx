@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { StickyNote, Plus, Trash2, ChevronDown, ChevronUp, Save } from 'lucide-react'
-import { debouncedAutoSync, markNoteDeleted } from '../lib/sync'
+import { autoSync, markNoteDeleted } from '../lib/sync'
 
 const STORAGE_KEY = 'travel-notes'
 
@@ -23,8 +23,8 @@ function generateId() {
 function TravelNotes() {
   const [notes, setNotes] = useState(loadNotes)
   const [expandedId, setExpandedId] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const titleInputRef = useRef(null)
+  const [draft, setDraft] = useState(null) // { id, title, content, timestamp } | null
+  const [isSaving, setIsSaving] = useState(false)
 
   // Listen for sync-complete to merge remote notes
   useEffect(() => {
@@ -56,43 +56,96 @@ function TravelNotes() {
     return () => window.removeEventListener('sync-complete', handleSync)
   }, [])
 
-  const persistAndSync = useCallback((newNotes) => {
+  const persistAndSave = useCallback(async (newNotes) => {
     saveNotes(newNotes)
     setNotes(newNotes)
-    debouncedAutoSync()
+    setIsSaving(true)
+    try {
+      await autoSync()
+    } catch {
+      // sync fallisce silenziosamente, i dati sono già in localStorage
+    } finally {
+      setIsSaving(false)
+    }
   }, [])
 
   const handleCreateNote = () => {
-    const note = {
+    // Se c'era una nuova nota non ancora salvata (non in localStorage), rimuovila
+    if (draft && !loadNotes().some(n => n.id === draft.id)) {
+      setNotes(prev => prev.filter(n => n.id !== draft.id))
+    }
+    const newNote = {
       id: generateId(),
       title: '',
       content: '',
       timestamp: new Date().toISOString(),
     }
-    const newNotes = [note, ...notes]
-    persistAndSync(newNotes)
-    setExpandedId(note.id)
+    // Aggiungiamo subito alla lista per mostrarla, ma NON salviamo ancora in localStorage
+    const newNotes = [newNote, ...notes]
+    setNotes(newNotes)
+    setExpandedId(newNote.id)
+    setDraft({ ...newNote })
   }
 
-  const handleUpdateNote = (id, field, value) => {
-    const newNotes = notes.map(n => {
-      if (n.id === id) {
-        return { ...n, [field]: value, timestamp: new Date().toISOString() }
-      }
-      return n
-    })
-    persistAndSync(newNotes)
+  const handleUpdateDraft = (field, value) => {
+    if (!draft) return
+    setDraft(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleSaveNote = () => {
+    if (!draft) return
+
+    const savedNote = { ...draft, timestamp: new Date().toISOString() }
+    const existingIdx = notes.findIndex(n => n.id === savedNote.id)
+    let newNotes
+    if (existingIdx === -1) {
+      newNotes = [savedNote, ...notes]
+    } else {
+      newNotes = notes.map(n => n.id === savedNote.id ? savedNote : n)
+    }
+    persistAndSave(newNotes)
+    setDraft(null)
+    setExpandedId(null)
   }
 
   const handleDeleteNote = (id) => {
     const newNotes = notes.filter(n => n.id !== id)
-    persistAndSync(newNotes)
+    saveNotes(newNotes)
+    setNotes(newNotes)
     markNoteDeleted(id)
-    if (expandedId === id) setExpandedId(null)
+    autoSync().catch(() => {})
+    if (expandedId === id) {
+      setExpandedId(null)
+      setDraft(null)
+    }
   }
 
   const toggleExpand = (id) => {
-    setExpandedId(expandedId === id ? null : id)
+    if (expandedId === id) {
+      // Collapse: discard draft
+      // Se la nota in draft non è ancora salvata in localStorage, rimuovila dalla lista
+      if (draft && !loadNotes().some(n => n.id === draft.id)) {
+        setNotes(prev => prev.filter(n => n.id !== draft.id))
+      }
+      setExpandedId(null)
+      setDraft(null)
+    } else {
+      // Se stiamo cambiando nota, scarta il draft precedente (se non salvato)
+      if (draft && expandedId && !loadNotes().some(n => n.id === draft.id)) {
+        setNotes(prev => prev.filter(n => n.id !== draft.id))
+      }
+      // Expand: load note into draft
+      const note = notes.find(n => n.id === id)
+      if (note) {
+        setDraft({ ...note })
+        setExpandedId(id)
+      }
+    }
+  }
+
+  const getDisplayNote = (note) => {
+    if (draft && draft.id === note.id) return draft
+    return note
   }
 
   return (
@@ -131,11 +184,14 @@ function TravelNotes() {
         </div>
       ) : (
         <div className="space-y-3">
-          {notes.map((note) => (
+          {notes.map((note) => {
+            const display = getDisplayNote(note)
+            const isExpanded = expandedId === note.id
+            return (
             <div
               key={note.id}
               className={`section-card transition-all ${
-                expandedId === note.id ? 'ring-2 ring-rose-300 shadow-lg' : ''
+                isExpanded ? 'ring-2 ring-rose-300 shadow-lg' : ''
               }`}
             >
               {/* Note Header */}
@@ -144,11 +200,11 @@ function TravelNotes() {
                 onClick={() => toggleExpand(note.id)}
               >
                 <div className="flex-1 min-w-0 mr-3">
-                  {expandedId === note.id ? (
+                  {isExpanded ? (
                     <input
                       type="text"
-                      value={note.title}
-                      onChange={(e) => handleUpdateNote(note.id, 'title', e.target.value)}
+                      value={display.title}
+                      onChange={(e) => handleUpdateDraft('title', e.target.value)}
                       onClick={(e) => e.stopPropagation()}
                       placeholder="Titolo della nota..."
                       className="w-full text-lg font-semibold text-rose-800 bg-transparent border-b-2 border-rose-200 focus:border-rose-400 outline-none pb-1 placeholder-rose-300"
@@ -159,14 +215,14 @@ function TravelNotes() {
                       {note.title || 'Nota senza titolo'}
                     </h3>
                   )}
-                  {expandedId !== note.id && note.content && (
+                  {!isExpanded && note.content && (
                     <p className="text-sm text-rose-500 mt-1 truncate">
                       {note.content}
                     </p>
                   )}
                 </div>
                 <div className="flex items-center gap-1 flex-shrink-0">
-                  {expandedId === note.id ? (
+                  {isExpanded ? (
                     <ChevronUp className="w-5 h-5 text-rose-400" />
                   ) : (
                     <ChevronDown className="w-5 h-5 text-rose-400" />
@@ -175,11 +231,11 @@ function TravelNotes() {
               </div>
 
               {/* Note Content (expanded) */}
-              {expandedId === note.id && (
+              {isExpanded && (
                 <div className="mt-3 space-y-3">
                   <textarea
-                    value={note.content}
-                    onChange={(e) => handleUpdateNote(note.id, 'content', e.target.value)}
+                    value={display.content}
+                    onChange={(e) => handleUpdateDraft('content', e.target.value)}
                     placeholder="Scrivi qui il contenuto della nota..."
                     className="w-full min-h-[150px] text-rose-700 bg-rose-50/50 border border-rose-200 rounded-lg p-3 resize-y focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 placeholder-rose-300 text-sm"
                   />
@@ -187,22 +243,33 @@ function TravelNotes() {
                     <span className="text-xs text-rose-400">
                       {note.timestamp ? new Date(note.timestamp).toLocaleString('it-IT') : ''}
                     </span>
-                    <button
-                      onClick={() => {
-                        if (window.confirm('Eliminare questa nota?')) {
-                          handleDeleteNote(note.id)
-                        }
-                      }}
-                      className="flex items-center gap-1 text-rose-400 hover:text-rose-600 transition-colors text-sm font-medium"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Elimina
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleSaveNote}
+                        disabled={isSaving}
+                        className="flex items-center gap-1.5 bg-rose-500 text-white px-4 py-2 rounded-full font-medium hover:bg-rose-600 transition-colors text-sm shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+                      >
+                        <Save className="w-4 h-4" />
+                        {isSaving ? 'Salvando...' : 'Salva'}
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (window.confirm('Eliminare questa nota?')) {
+                            handleDeleteNote(note.id)
+                          }
+                        }}
+                        className="flex items-center gap-1 text-rose-400 hover:text-rose-600 transition-colors text-sm font-medium"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Elimina
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>
