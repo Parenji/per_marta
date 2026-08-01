@@ -2,8 +2,8 @@
   "entries": [],
   "checklist": {
     "day-1-0": {
-      "v": false,
-      "t": "2026-08-01T00:18:05.716Z"
+      "v": true,
+      "t": "2026-08-01T01:49:36.014Z"
     },
     "day-3-1": {
       "v": false,
@@ -43,7 +43,7 @@
     },
     "day-1-1": {
       "v": false,
-      "t": "2026-08-01T00:11:35.791Z"
+      "t": "2026-08-01T01:14:50.053Z"
     },
     "day-1-2": {
       "v": false,
@@ -66,5 +66,13 @@
       "t": "2026-08-01T00:11:35.791Z"
     }
   },
-  "lastModified": "2026-08-01T00:59:49.224Z"
+  "notes": [
+    {
+      "id": "note_1785545583189_790dhr",
+      "title": "se leggi questo, bravissima",
+      "content": "vuol dire che hai inserito il codice correttamente",
+      "timestamp": "2026-08-01T00:54:11.251Z"
+    }
+  ],
+  "lastModified": "2026-08-01T01:49:38.365Z"
 }
