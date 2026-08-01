@@ -42,7 +42,7 @@ function SyncPanel({ onSyncComplete }) {
       // Notify all components that sync completed
       window.dispatchEvent(new CustomEvent('sync-complete', { detail: result }))
       const entryCount = result.entries?.length || 0
-      const checklistCount = Object.values(result.checklist || {}).filter(Boolean).length
+      const checklistCount = Object.values(result.checklist || {}).filter(v => (typeof v === 'object' ? v.v : v)).length
 
       setStats({ entries: entryCount, checklist: checklistCount })
       setStatus('success')
