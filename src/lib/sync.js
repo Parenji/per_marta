@@ -229,6 +229,7 @@ async function pushRemoteFile(data, sha) {
 let autoSyncInProgress = false
 let autoSyncDebounceTimer = null
 let pendingSyncRequest = false
+let lastSyncFinishedAt = 0
 
 async function _doAutoSync() {
   autoSyncInProgress = true
@@ -251,10 +252,16 @@ async function _doAutoSync() {
     throw err
   } finally {
     autoSyncInProgress = false
-    // Retry if a sync was requested while this one was in progress
+    lastSyncFinishedAt = Date.now()
+    // Retry if a sync was requested while this one was in progress,
+    // but wait for GitHub to settle (min 3s cooldown between syncs)
     if (pendingSyncRequest) {
       pendingSyncRequest = false
-      _doAutoSync().catch(() => {})
+      const sinceLastSync = Date.now() - lastSyncFinishedAt
+      const cooldown = Math.max(0, 3000 - sinceLastSync)
+      setTimeout(() => {
+        _doAutoSync().catch(() => {})
+      }, cooldown)
     }
   }
 }
