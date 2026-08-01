@@ -58,31 +58,23 @@ function SyncPanel({ onSyncComplete }) {
     }
   }, [token, onSyncComplete])
 
-  if (showSetup) {
-    return (
-      <div className="section-card bg-amber-50 border border-amber-200 max-w-md mx-auto text-left">
-        <div className="flex items-center justify-between mb-2">
+  const setupModal = showSetup && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget && hasToken()) setShowSetup(false) }}>
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-slide-up border border-amber-200">
+        <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-amber-800 flex items-center gap-2">
             <Key className="w-4 h-4" />
             Configura Sync GitHub
           </h3>
           {hasToken() && (
-            <button
-              onClick={() => setShowSetup(false)}
-              className="text-amber-500 hover:text-amber-700"
-            >
+            <button onClick={() => setShowSetup(false)} className="text-amber-500 hover:text-amber-700">
               <X className="w-4 h-4" />
             </button>
           )}
         </div>
-        <p className="text-xs text-amber-700 mb-2">
+        <p className="text-xs text-amber-700 mb-3">
           Crea un token su{' '}
-          <a
-            href="https://github.com/settings/tokens"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline font-medium"
-          >
+          <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer" className="underline font-medium">
             GitHub → Settings → Developer settings → Tokens (classic)
           </a>
           {' '}con permesso <strong>repo</strong>, poi incollalo qui:
@@ -108,15 +100,17 @@ function SyncPanel({ onSyncComplete }) {
             Salva
           </button>
         </div>
-        <p className="text-[10px] text-amber-600 mt-2">
+        <p className="text-[10px] text-amber-600 mt-3">
           Il token resta salvato solo sul tuo telefono.
         </p>
       </div>
-    )
-  }
+    </div>
+  )
 
   return (
-    <div className="flex items-center gap-2">
+    <>
+      {setupModal}
+      <div className="flex items-center gap-2">
       {/* Sync button — compact, header-style */}
       <button
         onClick={handleSync}
@@ -154,6 +148,7 @@ function SyncPanel({ onSyncComplete }) {
         </button>
       )}
     </div>
+    </>
   )
 }
 
