@@ -15,7 +15,7 @@ function timeAgo(isoString) {
 
 function SyncPanel({ onSyncComplete }) {
   const [token, setToken] = useState(hasToken() ? localStorage.getItem('github-token') || '' : '')
-  const [showSetup, setShowSetup] = useState(!hasToken())
+  const [showSetup, setShowSetup] = useState(!hasToken() && !localStorage.getItem('sync-setup-skipped'))
   const [syncing, setSyncing] = useState(false)
   const [status, setStatus] = useState(null) // 'success' | 'error' | null
   const [statusMessage, setStatusMessage] = useState('')
@@ -58,8 +58,13 @@ function SyncPanel({ onSyncComplete }) {
     }
   }, [token, onSyncComplete])
 
+  const closeSetup = () => {
+    localStorage.setItem('sync-setup-skipped', '1')
+    setShowSetup(false)
+  }
+
   const setupModal = showSetup && (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget && hasToken()) setShowSetup(false) }}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) closeSetup() }}>
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-slide-up border border-amber-200">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-amber-800 flex items-center gap-2">
@@ -91,6 +96,7 @@ function SyncPanel({ onSyncComplete }) {
             onClick={() => {
               if (token.trim()) {
                 saveToken(token.trim())
+                localStorage.removeItem('sync-setup-skipped')
                 setShowSetup(false)
               }
             }}
@@ -100,7 +106,15 @@ function SyncPanel({ onSyncComplete }) {
             Salva
           </button>
         </div>
-        <p className="text-[10px] text-amber-600 mt-3">
+        <div className="flex gap-2 mt-3">
+          <button
+            onClick={closeSetup}
+            className="flex-1 py-2 text-xs text-amber-600 hover:text-amber-700 font-medium transition-colors"
+          >
+            Salta
+          </button>
+        </div>
+        <p className="text-[10px] text-amber-600 mt-2">
           Il token resta salvato solo sul tuo telefono.
         </p>
       </div>
@@ -137,8 +151,19 @@ function SyncPanel({ onSyncComplete }) {
         </span>
       )}
 
-      {/* Config gear */}
-      {!hasToken() ? null : (
+      {/* Config gear — always visible so you can open setup later */}
+      {!hasToken() ? (
+        <button
+          onClick={() => {
+            localStorage.removeItem('sync-setup-skipped')
+            setShowSetup(true)
+          }}
+          className="text-white/50 hover:text-white/80 transition-colors"
+          title="Configura sync"
+        >
+          <Settings className="w-3 h-3" />
+        </button>
+      ) : (
         <button
           onClick={() => setShowSetup(true)}
           className="text-white/50 hover:text-white/80 transition-colors"
