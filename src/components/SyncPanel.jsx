@@ -42,7 +42,9 @@ function SyncPanel({ onSyncComplete }) {
 
       setStatus('success')
       const entryCount = result.entries?.length || 0
-      setStatusMessage(`${entryCount} ricordi sincronizzati`)
+      const notesCount = result.notes?.length || 0
+      const checklistCount = Object.values(result.checklist || {}).filter(item => item && item.v === true).length
+      setStatusMessage(`Sync ok: ${entryCount} ricordi, ${notesCount} note, ${checklistCount} attività`)
 
       if (onSyncComplete) {
         onSyncComplete(result)

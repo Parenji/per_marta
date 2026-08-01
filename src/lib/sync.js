@@ -228,11 +228,9 @@ async function pushRemoteFile(data, sha) {
 
 let autoSyncInProgress = false
 let autoSyncDebounceTimer = null
+let pendingSyncRequest = false
 
-export async function autoSync() {
-  if (autoSyncInProgress) return
-  if (!hasToken()) return
-
+async function _doAutoSync() {
   autoSyncInProgress = true
   window.dispatchEvent(new CustomEvent('sync-status-change', { detail: { status: 'syncing' } }))
 
@@ -253,7 +251,22 @@ export async function autoSync() {
     throw err
   } finally {
     autoSyncInProgress = false
+    // Retry if a sync was requested while this one was in progress
+    if (pendingSyncRequest) {
+      pendingSyncRequest = false
+      _doAutoSync().catch(() => {})
+    }
   }
+}
+
+export async function autoSync() {
+  if (!hasToken()) return
+  if (autoSyncInProgress) {
+    // Mark that we need a re-sync once the current one finishes
+    pendingSyncRequest = true
+    return
+  }
+  return _doAutoSync()
 }
 
 // Debounced autoSync (for checklist toggles — fire after 2s of inactivity)
@@ -268,17 +281,17 @@ export async function syncAll() {
   const token = getToken()
   if (!token) throw new Error('Configura il token GitHub per sincronizzare')
 
-      // 1. Load local data (do this once, local state may change slightly but that's edge-case)
-      const local = loadLocalData()
-      const localDeletedIds = loadDeletedIds()
-      const notesDeletedIds = loadNotesDeletedIds()
-
-  const MAX_RETRIES = 3
+  const MAX_RETRIES = 5
   let lastError = null
 
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    // Reload local data fresh on every attempt (user may have made changes during retries)
+    const local = loadLocalData()
+    const localDeletedIds = loadDeletedIds()
+    const notesDeletedIds = loadNotesDeletedIds()
+
     try {
-      // 2. Fetch remote data
+      // Fetch remote data
       const remote = await fetchRemoteFile()
 
       // 3. Merge
@@ -318,8 +331,9 @@ export async function syncAll() {
       const message = err.message || ''
       if (message.includes('409') || message.includes('does not match') || message.includes('conflict')) {
         if (attempt < MAX_RETRIES - 1) {
-          // Wait a bit for the other push to settle, then retry
-          await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000))
+          // Exponential backoff: 1s, 2s, 4s, 8s + jitter
+          const delay = Math.pow(2, attempt) * 1000 + Math.random() * 1000
+          await new Promise(r => setTimeout(r, delay))
           continue
         }
       }
