@@ -1,5 +1,14 @@
 {
-  "entries": [],
+  "entries": [
+    {
+      "id": 1785544064413,
+      "day": 1,
+      "text": "prova",
+      "imageUrl": null,
+      "imageId": null,
+      "timestamp": "2026-08-01T00:27:44.413Z"
+    }
+  ],
   "checklist": {
     "day-1-0": {
       "v": false,
@@ -66,13 +75,5 @@
       "t": "2026-08-01T00:11:35.791Z"
     }
   },
-  "notes": [
-    {
-      "id": "note_1785544716417_jbefv3",
-      "title": "inkjn",
-      "content": "n kjnklonjnkjnkjnkj  nljkn",
-      "timestamp": "2026-08-01T00:39:39.492Z"
-    }
-  ],
-  "lastModified": "2026-08-01T00:42:49.674Z"
+  "lastModified": "2026-08-01T00:43:11.144Z"
 }
