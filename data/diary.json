@@ -1,5 +1,14 @@
 {
-  "entries": [],
+  "entries": [
+    {
+      "id": 1785544064413,
+      "day": 1,
+      "text": "prova",
+      "imageUrl": null,
+      "imageId": null,
+      "timestamp": "2026-08-01T00:27:44.413Z"
+    }
+  ],
   "checklist": {
     "day-1-0": {
       "v": false,
@@ -66,13 +75,5 @@
       "t": "2026-08-01T00:11:35.791Z"
     }
   },
-  "notes": [
-    {
-      "id": "note_1785545583189_790dhr",
-      "title": "se leggi questo, bravissima",
-      "content": "vuol dire che hai inserito il codice correttamente",
-      "timestamp": "2026-08-01T00:54:11.251Z"
-    }
-  ],
-  "lastModified": "2026-08-01T00:54:36.265Z"
+  "lastModified": "2026-08-01T00:58:47.833Z"
 }
