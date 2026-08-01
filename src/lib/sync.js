@@ -251,39 +251,61 @@ export async function syncAll() {
   const token = getToken()
   if (!token) throw new Error('Configura il token GitHub per sincronizzare')
 
-  // 1. Load local data
+  // 1. Load local data (do this once, local state may change slightly but that's edge-case)
   const local = loadLocalData()
   const localDeletedIds = loadDeletedIds()
 
-  // 2. Fetch remote data
-  const remote = await fetchRemoteFile()
+  const MAX_RETRIES = 3
+  let lastError = null
 
-  // 3. Merge
-  const mergedEntries = mergeEntries(local.entries, remote.data.entries || [], localDeletedIds)
-  const mergedChecklist = mergeChecklist(local.checklist, remote.data.checklist || {})
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      // 2. Fetch remote data
+      const remote = await fetchRemoteFile()
 
-  // 4. Clean up deleted IDs (remove those no longer in either local or remote)
-  const cleanedDeletedIds = cleanupDeletedIds(mergedEntries, localDeletedIds, remote.data.entries || [])
-  saveDeletedIds(cleanedDeletedIds)
+      // 3. Merge
+      const mergedEntries = mergeEntries(local.entries, remote.data.entries || [], localDeletedIds)
+      const mergedChecklist = mergeChecklist(local.checklist, remote.data.checklist || {})
 
-  // 5. Build final data
-  const finalData = {
-    entries: mergedEntries,
-    checklist: mergedChecklist,
-    lastModified: new Date().toISOString(),
+      // 4. Clean up deleted IDs (remove those no longer in either local or remote)
+      const cleanedDeletedIds = cleanupDeletedIds(mergedEntries, localDeletedIds, remote.data.entries || [])
+      saveDeletedIds(cleanedDeletedIds)
+
+      // 5. Build final data
+      const finalData = {
+        entries: mergedEntries,
+        checklist: mergedChecklist,
+        lastModified: new Date().toISOString(),
+      }
+
+      // 6. Push to GitHub
+      await pushRemoteFile(finalData, remote.sha)
+
+      // 7. Save merged data locally
+      saveLocalData(mergedEntries, mergedChecklist)
+      setLastSyncTime()
+
+      return {
+        entries: mergedEntries,
+        checklist: mergedChecklist,
+      }
+    } catch (err) {
+      lastError = err
+      // If conflict (SHA mismatch), retry after a short delay
+      const message = err.message || ''
+      if (message.includes('409') || message.includes('does not match') || message.includes('conflict')) {
+        if (attempt < MAX_RETRIES - 1) {
+          // Wait a bit for the other push to settle, then retry
+          await new Promise(r => setTimeout(r, 1000 + Math.random() * 1000))
+          continue
+        }
+      }
+      // Non-retryable error → throw immediately
+      throw err
+    }
   }
 
-  // 6. Push to GitHub
-  await pushRemoteFile(finalData, remote.sha)
-
-  // 7. Save merged data locally
-  saveLocalData(mergedEntries, mergedChecklist)
-  setLastSyncTime()
-
-  return {
-    entries: mergedEntries,
-    checklist: mergedChecklist,
-  }
+  throw lastError || new Error('Sync failed after retries')
 }
 
 // Mark an entry as deleted (called when user deletes locally)
