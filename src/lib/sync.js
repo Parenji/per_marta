@@ -230,6 +230,20 @@ let autoSyncInProgress = false
 let autoSyncDebounceTimer = null
 let pendingSyncRequest = false
 let lastSyncFinishedAt = 0
+let cooldownTimer = null
+
+const MIN_SYNC_INTERVAL = 3000 // 3 seconds between syncs
+
+function scheduleDeferredSync() {
+  if (cooldownTimer) clearTimeout(cooldownTimer)
+  const sinceLastSync = Date.now() - lastSyncFinishedAt
+  const delay = lastSyncFinishedAt === 0 ? 0 : Math.max(0, MIN_SYNC_INTERVAL - sinceLastSync)
+  cooldownTimer = setTimeout(() => {
+    cooldownTimer = null
+    pendingSyncRequest = false
+    _doAutoSync().catch(() => {})
+  }, delay)
+}
 
 async function _doAutoSync() {
   autoSyncInProgress = true
@@ -239,7 +253,6 @@ async function _doAutoSync() {
     const result = await syncAll()
     window.dispatchEvent(new CustomEvent('sync-complete', { detail: result }))
     window.dispatchEvent(new CustomEvent('sync-status-change', { detail: { status: 'success' } }))
-    // Auto-hide success after 2s
     setTimeout(() => {
       window.dispatchEvent(new CustomEvent('sync-status-change', { detail: { status: 'idle' } }))
     }, 2000)
@@ -253,15 +266,8 @@ async function _doAutoSync() {
   } finally {
     autoSyncInProgress = false
     lastSyncFinishedAt = Date.now()
-    // Retry if a sync was requested while this one was in progress,
-    // but wait for GitHub to settle (min 3s cooldown between syncs)
     if (pendingSyncRequest) {
-      pendingSyncRequest = false
-      const sinceLastSync = Date.now() - lastSyncFinishedAt
-      const cooldown = Math.max(0, 3000 - sinceLastSync)
-      setTimeout(() => {
-        _doAutoSync().catch(() => {})
-      }, cooldown)
+      scheduleDeferredSync()
     }
   }
 }
@@ -269,8 +275,14 @@ async function _doAutoSync() {
 export async function autoSync() {
   if (!hasToken()) return
   if (autoSyncInProgress) {
-    // Mark that we need a re-sync once the current one finishes
     pendingSyncRequest = true
+    return
+  }
+  // Enforce cooldown: if a sync finished recently, defer
+  const sinceLastSync = Date.now() - lastSyncFinishedAt
+  if (lastSyncFinishedAt > 0 && sinceLastSync < MIN_SYNC_INTERVAL) {
+    pendingSyncRequest = true
+    scheduleDeferredSync()
     return
   }
   return _doAutoSync()
