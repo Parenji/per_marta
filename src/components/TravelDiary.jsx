@@ -165,6 +165,9 @@ function TravelDiary() {
     setEntries(updated)
     saveEntries(updated)
     setShowConfirmDelete(null)
+
+    // Auto-sync after deleting entry
+    autoSync().catch(() => {})
   }, [entries, loadedImages])
 
   const entryCounts = DAYS.reduce((acc, d) => {
