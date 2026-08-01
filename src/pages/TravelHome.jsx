@@ -488,6 +488,7 @@ const placesToVisit = [
               2-9 Agosto 2026
             </p>
             <SyncIndicator />
+            <SyncPanel />
           </div>
         </div>
       </div>
@@ -845,7 +846,6 @@ const placesToVisit = [
 
       {/* Footer */}
       <div className="max-w-6xl mx-auto px-4 mt-12 text-center">
-        <SyncPanel />
         <div className="flex justify-center gap-2 mb-4">
           {[...Array(5)].map((_, i) => (
             <Heart key={i} className="w-5 h-5 text-rose-400 fill-rose-400" />
